@@ -11,7 +11,7 @@ Purpose: new-grad portfolio project. Fills resume gaps (client-facing app, real-
 
 - **One live game tracked at a time** (user-selected, or auto-selected as the highest-scoring active game in their league). Multi-game concurrent tracking is explicit future work, not an oversight.
 - **League import: Sleeper only** (public, read-only, no auth). Yahoo/ESPN are future work — not built symmetrically now.
-- **Data provider: API-Football (RapidAPI free tier)**. Free tier ceiling: 100 requests/day. This is a hard constraint driving the poll-interval math below.
+- **Data provider: API-American-Football (RapidAPI free tier)**. Free tier ceiling: 100 requests/day. This is a hard constraint driving the poll-interval math below.
 - **Poll interval: 90 seconds, only during live windows.** Roughly 140 requests per 3.5hr game at 90s — already near/over the daily cap for more than one game, hence the single-game constraint.
 - Build against the free tier **behind an adapter interface** so switching to a paid provider later (if this goes to production) is a config change, not a rewrite.
 
@@ -41,7 +41,7 @@ Purpose: new-grad portfolio project. Fills resume gaps (client-facing app, real-
 
 ### Data provider abstraction
 - Internal types: `GameState`, `ScoringEvent` (your own model, not the provider's JSON shape).
-- One adapter function: `fetchGameState(gameId) -> GameState`, currently backed by API-Football.
+- One adapter function: `fetchGameState(gameId) -> GameState`, currently backed by API-American-Football.
 - If you later pay for a provider (e.g., SportsDataIO) for production use, you add a second adapter and swap one line — nothing downstream (SQS, DynamoDB schema, push logic, iOS app) changes.
 
 ### League import
@@ -53,7 +53,7 @@ Purpose: new-grad portfolio project. Fills resume gaps (client-facing app, real-
 
 - **AWS infra (Lambda, EventBridge, SQS, DynamoDB, SNS):** effectively $0–5/month at this scale (comfortably within free tiers). Not the actual cost driver — don't over-index on "optimizing AWS costs" in writeups at this scale.
 - **Sports data API is the real cost variable long-term:**
-  - Free tier (API-Football): ~100 req/day cap — workable for one tracked game at 90s intervals, not more.
+  - Free tier (API-American-Football): ~100 req/day cap — workable for one tracked game at 90s intervals, not more.
   - Paid live-data tiers: roughly $25–100+/month for broader coverage/frequency; full enterprise feeds (SportRadar) run much higher and aren't meant for solo projects.
 - **Decision for now:** stay on free tier. Defer any spend decision until you've decided whether this becomes a real production app vs. an on-demand portfolio demo.
 
@@ -62,7 +62,7 @@ Purpose: new-grad portfolio project. Fills resume gaps (client-facing app, real-
 ## Build order (sequence matters)
 
 1. **Data model + adapter interface** (`GameState`, `ScoringEvent`, `fetchGameState()` stub) — before touching AWS or Swift.
-2. **API-Football integration**, validated locally (plain script, not yet Lambda) against a live/recent game — confirm you can diff two snapshots and detect a scoring event. **Verify this first, before building any AWS architecture around it** — this is the step most likely to reveal the free tier doesn't actually give usable in-play NFL data (delay, incompleteness, etc.).
+2. **API-American-Football integration**, validated locally (plain script, not yet Lambda) against a live/recent game — confirm you can diff two snapshots and detect a scoring event. **Verify this first, before building any AWS architecture around it** — this is the step most likely to reveal the free tier doesn't actually give usable in-play NFL data (delay, incompleteness, etc.).
 3. **DynamoDB tables + Lambda poller**, deployed via SAM.
 4. **SQS + push Lambda + APNs** fan-out.
 5. **Sleeper import** (independent track, parallelizable with 1–4).

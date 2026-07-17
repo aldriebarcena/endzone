@@ -25,5 +25,8 @@ venv/
 .env
 .env.local
 
+# Raw API exploration output (Phase 2)
+backend/scripts/output/
+
 # Ignore claude director
 .claude
