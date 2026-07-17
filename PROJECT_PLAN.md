@@ -3,10 +3,10 @@
 Task checklist tracking progress against [DESIGN.md](DESIGN.md)'s Build order. Phases are sequenced deliberately (see DESIGN.md) — do them roughly in order except Phase 5, which is explicitly parallelizable.
 
 ## Phase 1 — Data model + adapter interface
-- [ ] Define `GameState` type
-- [ ] Define `ScoringEvent` type
-- [ ] Define `fetchGameState(gameId) -> GameState` adapter function signature (stub, no real provider yet)
-- [ ] Unit test scaffolding for model construction
+- [x] Define `GameState` type
+- [x] Define `ScoringEvent` type
+- [x] Define `fetchGameState(gameId) -> GameState` adapter function signature (stub, no real provider yet)
+- [x] Unit test scaffolding for model construction
 
 ## Phase 2 — API-Football integration (local validation)
 - [ ] Get a RapidAPI key for API-Football
