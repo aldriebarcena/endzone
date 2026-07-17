@@ -1,0 +1,25 @@
+# macOS
+.DS_Store
+
+# Xcode / Swift
+.build/
+*.xcodeproj/xcuserdata/
+*.xcworkspace/xcuserdata/
+DerivedData/
+.swiftpm/
+
+# AWS SAM
+.aws-sam/
+
+# Node (if Lambda functions use Node)
+node_modules/
+
+# Python (if Lambda functions use Python)
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Env files
+.env
+.env.local
