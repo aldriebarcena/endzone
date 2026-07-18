@@ -45,7 +45,7 @@ final class FakeFantaseeAPI: FantaseeAPI {
         )
     }
 
-    func importLeague(leagueId: String) async throws -> LeagueConfigDTO {
+    func importLeague(leagueId: String, authToken: String) async throws -> LeagueConfigDTO {
         LeagueConfigDTO(
             userId: "fake-user",
             sleeperLeagueId: leagueId,
@@ -54,5 +54,9 @@ final class FakeFantaseeAPI: FantaseeAPI {
             pointValues: ["pass_td": 6.0, "rush_td": 6.0, "rec": 1.0, "rec_td": 6.0],
             importedAt: Date()
         )
+    }
+
+    func registerDeviceToken(_ deviceToken: String, authToken: String) async throws {
+        // No-op — nothing to persist against in the fake implementation.
     }
 }

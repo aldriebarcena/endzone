@@ -24,7 +24,7 @@ Parameters:
     Description: Contents of the APNs .p8 auth key file
   ApnsBundleId:
     Type: String
-    Description: iOS app's bundle identifier (APNs topic)
+    Description: iOS app's bundle identifier. Dual use — APNs topic AND the JWT "aud" claim FantaseeHttpApi's authorizer checks Sign in with Apple identity tokens against, since both are the same bundle ID for a native app.
   ApnsSandbox:
     Type: String
     Default: "true"
@@ -66,6 +66,64 @@ Resources:
       TimeToLiveSpecification:
         AttributeName: expiresAt
         Enabled: true
+
+  # The write path for LeagueConfig the iOS client needs (import a league,
+  # register a device token). Auth is Sign in with Apple's identity token,
+  # verified by API Gateway's native JWT authorizer against Apple's public
+  # JWKS — no custom token-verification code needed in either Lambda; by
+  # the time a handler runs, requestContext.authorizer.jwt.claims.sub is
+  # already a trusted userId. HTTP API (not REST API) specifically because
+  # it has this JWT authorizer built in.
+  FantaseeHttpApi:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      Auth:
+        Authorizers:
+          AppleSignInAuthorizer:
+            JwtConfiguration:
+              issuer: https://appleid.apple.com
+              audience:
+                - !Ref ApnsBundleId
+            IdentitySource: "$request.header.Authorization"
+        DefaultAuthorizer: AppleSignInAuthorizer
+
+  ImportLeagueFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/
+      Handler: api.import_league.app.handler
+      Environment:
+        Variables:
+          LEAGUE_CONFIG_TABLE: !Ref LeagueConfigTable
+      Policies:
+        - DynamoDBWritePolicy:
+            TableName: !Ref LeagueConfigTable
+      Events:
+        ImportLeague:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref FantaseeHttpApi
+            Path: /leagues
+            Method: POST
+
+  RegisterDeviceTokenFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/
+      Handler: api.register_device_token.app.handler
+      Environment:
+        Variables:
+          LEAGUE_CONFIG_TABLE: !Ref LeagueConfigTable
+      Policies:
+        - DynamoDBWritePolicy:
+            TableName: !Ref LeagueConfigTable
+      Events:
+        RegisterDeviceToken:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref FantaseeHttpApi
+            Path: /device-token
+            Method: PUT
 
   ScoringEventsDLQ:
     Type: AWS::SQS::Queue
@@ -204,3 +262,5 @@ Outputs:
     Value: !Ref PushFunction
   BillingAlarmTopicArn:
     Value: !Ref BillingAlarmTopic
+  FantaseeHttpApiUrl:
+    Value: !Sub "https://${FantaseeHttpApi}.execute-api.${AWS::Region}.amazonaws.com"

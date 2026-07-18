@@ -13,6 +13,7 @@
 		49336F9DC709FEB83F530FC9 /* FakeFantaseeAPITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC9859FCB091DDECD0AA4601 /* FakeFantaseeAPITests.swift */; };
 		4CFD3692749A1AF1F35A4BD3 /* LiveFeedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 771A4400D9C3FE7D696F60AE /* LiveFeedView.swift */; };
 		7CDBC9F89965A42CA27F48DF /* LeagueConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39F1917C43B8DEF06E739FAA /* LeagueConfig.swift */; };
+		801234CBD312AB3646726B26 /* LeagueImportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90BE5909FB9E94D448A0A43 /* LeagueImportView.swift */; };
 		823FE9804E31EA099BC97076 /* ScoringEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D738F0F77EA1C2B2B18C25C4 /* ScoringEvent.swift */; };
 		937CEEC2DA7A75712A678C84 /* URLSessionFantaseeAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 356765441C0E6FE8F4A11414 /* URLSessionFantaseeAPI.swift */; };
 		96FF1209E7881FB8060CC128 /* DTOs.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1A18225F90664724C17A552 /* DTOs.swift */; };
@@ -49,6 +50,7 @@
 		A1A18225F90664724C17A552 /* DTOs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTOs.swift; sourceTree = "<group>"; };
 		A29B69DE35E3C132F57E6174 /* PushNotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotificationManager.swift; sourceTree = "<group>"; };
 		AC9859FCB091DDECD0AA4601 /* FakeFantaseeAPITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeFantaseeAPITests.swift; sourceTree = "<group>"; };
+		B90BE5909FB9E94D448A0A43 /* LeagueImportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeagueImportView.swift; sourceTree = "<group>"; };
 		C6AD1CA5E563751C07E72CAF /* SignInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInView.swift; sourceTree = "<group>"; };
 		D738F0F77EA1C2B2B18C25C4 /* ScoringEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoringEvent.swift; sourceTree = "<group>"; };
 		EFA012C443447D4869539318 /* FantaseeTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = FantaseeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -109,6 +111,7 @@
 			isa = PBXGroup;
 			children = (
 				61100D44FFAACD53D129D92F /* ContentView.swift */,
+				B90BE5909FB9E94D448A0A43 /* LeagueImportView.swift */,
 				771A4400D9C3FE7D696F60AE /* LiveFeedView.swift */,
 				C6AD1CA5E563751C07E72CAF /* SignInView.swift */,
 			);
@@ -236,6 +239,7 @@
 				46DE63F2E56FC589378E42F9 /* FantaseeApp.swift in Sources */,
 				CE4A68E7D1E8B60DBBDEAA9D /* GameState.swift in Sources */,
 				7CDBC9F89965A42CA27F48DF /* LeagueConfig.swift in Sources */,
+				801234CBD312AB3646726B26 /* LeagueImportView.swift in Sources */,
 				4CFD3692749A1AF1F35A4BD3 /* LiveFeedView.swift in Sources */,
 				CCBBF9CBBFEDF61C4FAE1225 /* PushNotificationManager.swift in Sources */,
 				823FE9804E31EA099BC97076 /* ScoringEvent.swift in Sources */,

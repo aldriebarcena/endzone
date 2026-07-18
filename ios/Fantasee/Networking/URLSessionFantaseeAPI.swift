@@ -1,10 +1,12 @@
 import Foundation
 
-// The real backend implementation. Untestable end-to-end right now — the
-// backend API surface this talks to doesn't exist yet (see
-// PROJECT_PLAN.md's "no API surface for the iOS client" open question).
-// Written against the shape that API will need to have, not verified
-// against a live endpoint.
+// The real backend implementation. Matches backend/template.yaml's
+// FantaseeHttpApi routes (POST /leagues, PUT /device-token) and the
+// Sign in with Apple JWT auth its authorizer expects. Untestable
+// end-to-end right now regardless — the API isn't deployed (see
+// PROJECT_PLAN.md's scope decision), so this is verified by matching
+// the backend's actual route/handler code, not by hitting a live
+// endpoint.
 final class URLSessionFantaseeAPI: FantaseeAPI {
     private let baseURL: URL
     private let session: URLSession
@@ -36,15 +38,27 @@ final class URLSessionFantaseeAPI: FantaseeAPI {
         return try decoder.decode(GameStateDTO.self, from: data)
     }
 
-    func importLeague(leagueId: String) async throws -> LeagueConfigDTO {
-        var request = URLRequest(url: baseURL.appendingPathComponent("league-config"))
+    func importLeague(leagueId: String, authToken: String) async throws -> LeagueConfigDTO {
+        var request = URLRequest(url: baseURL.appendingPathComponent("leagues"))
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("Bearer \(authToken)", forHTTPHeaderField: "Authorization")
         request.httpBody = try encoder.encode(ImportLeagueRequest(sleeperLeagueId: leagueId))
 
         let (data, response) = try await session.data(for: request)
         try Self.validate(response)
         return try decoder.decode(LeagueConfigDTO.self, from: data)
+    }
+
+    func registerDeviceToken(_ deviceToken: String, authToken: String) async throws {
+        var request = URLRequest(url: baseURL.appendingPathComponent("device-token"))
+        request.httpMethod = "PUT"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("Bearer \(authToken)", forHTTPHeaderField: "Authorization")
+        request.httpBody = try encoder.encode(RegisterDeviceTokenRequest(deviceToken: deviceToken))
+
+        let (_, response) = try await session.data(for: request)
+        try Self.validate(response)
     }
 
     private static func validate(_ response: URLResponse) throws {

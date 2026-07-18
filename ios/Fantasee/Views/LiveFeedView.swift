@@ -1,13 +1,11 @@
 import SwiftUI
 
 struct LiveFeedView: View {
-    // TODO: swap for URLSessionFantaseeAPI once the backend API surface
-    // exists (PROJECT_PLAN.md open question). Demo game ID is a stand-in
-    // for real game selection, which also needs that surface.
-    private let api: FantaseeAPI = FakeFantaseeAPI()
+    @Environment(\.fantaseeAPI) private var api
 
     @State private var gameState: GameStateDTO?
     @State private var errorMessage: String?
+    @State private var showingLeagueImport = false
 
     var body: some View {
         NavigationStack {
@@ -41,6 +39,14 @@ struct LiveFeedView: View {
                 }
             }
             .navigationTitle("Live Feed")
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("Import League") { showingLeagueImport = true }
+                }
+            }
+            .sheet(isPresented: $showingLeagueImport) {
+                LeagueImportView()
+            }
             .task {
                 await loadGame()
             }
@@ -48,6 +54,9 @@ struct LiveFeedView: View {
     }
 
     private func loadGame() async {
+        // Demo game ID stands in for real game selection, which needs
+        // the same missing per-user context as league selection did
+        // (see PROJECT_PLAN.md's checker open question).
         do {
             gameState = try await api.fetchLiveGame(gameId: "demo")
         } catch {

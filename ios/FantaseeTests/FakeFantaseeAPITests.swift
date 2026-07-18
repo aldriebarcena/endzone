@@ -15,9 +15,15 @@ struct FakeFantaseeAPITests {
     @Test func importLeagueReturnsSeededPointValues() async throws {
         let api = FakeFantaseeAPI()
 
-        let config = try await api.importLeague(leagueId: "12345")
+        let config = try await api.importLeague(leagueId: "12345", authToken: "fake-token")
 
         #expect(config.sleeperLeagueId == "12345")
         #expect(config.pointValues["pass_td"] == 6.0)
+    }
+
+    @Test func registerDeviceTokenDoesNotThrow() async throws {
+        let api = FakeFantaseeAPI()
+
+        try await api.registerDeviceToken("abc123", authToken: "fake-token")
     }
 }

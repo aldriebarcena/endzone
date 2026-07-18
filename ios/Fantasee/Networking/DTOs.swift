@@ -1,9 +1,9 @@
 import Foundation
 
-// Wire format for the (not-yet-built) backend API — see PROJECT_PLAN.md's
-// "no API surface for the iOS client" open question. Kept separate from
-// the SwiftData @Model types, same as the backend keeps GameState/
-// ScoringEvent separate from DynamoDB item shape (storage.py).
+// Wire format for backend/template.yaml's FantaseeHttpApi (not deployed —
+// see PROJECT_PLAN.md's scope decision). Kept separate from the SwiftData
+// @Model types, same as the backend keeps GameState/ScoringEvent separate
+// from DynamoDB item shape (storage.py).
 
 struct GameStateDTO: Codable {
     let gameId: String
@@ -42,4 +42,8 @@ struct LeagueConfigDTO: Codable {
 
 struct ImportLeagueRequest: Codable {
     let sleeperLeagueId: String
+}
+
+struct RegisterDeviceTokenRequest: Codable {
+    let deviceToken: String
 }

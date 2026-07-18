@@ -4,6 +4,14 @@ import Observation
 @Observable
 final class AuthManager {
     var userId: String?
+    // The JWT sent as `Authorization: Bearer <identityToken>` on every
+    // FantaseeAPI call — the backend's API Gateway JWT authorizer
+    // verifies it against Apple's public JWKS (see backend/template.yaml
+    // FantaseeHttpApi). Short-lived (Apple expires these after ~10 min);
+    // this app doesn't refresh it mid-session, just re-captures a fresh
+    // one on the next sign-in. Fine for a portfolio demo, not for a real
+    // production session.
+    var identityToken: String?
 
     var isSignedIn: Bool { userId != nil }
 
@@ -14,10 +22,7 @@ final class AuthManager {
                 return
             }
             userId = credential.user
-            // TODO: send credential.identityToken to the backend once the
-            // LeagueConfig write API exists. Backend needs to verify this
-            // JWT against Apple's public JWKS to trust `userId` — see
-            // PROJECT_PLAN.md open questions.
+            identityToken = credential.identityToken.flatMap { String(data: $0, encoding: .utf8) }
         case .failure(let error):
             print("Sign in with Apple failed: \(error)")
             // TODO: surface to UI instead of just logging.
