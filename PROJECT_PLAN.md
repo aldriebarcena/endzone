@@ -29,11 +29,14 @@ Task checklist tracking progress against [DESIGN.md](DESIGN.md)'s Build order. P
 - [ ] `sam deploy --guided` — not run yet (creates real billed AWS resources; needs AWS credentials configured and explicit go-ahead first)
 
 ## Phase 4 — SQS + push Lambda + APNs fan-out
-- [ ] SQS queue for "new scoring event detected"
-- [ ] Poller Lambda publishes diffed events to SQS
-- [ ] Push Lambda (SNS or direct APNs call) triggered off the queue
-- [ ] APNs certs/keys, sandbox testing
-- [ ] CloudWatch billing alarm at $5
+- [x] SQS queue for "new scoring event detected", with a DLQ (maxReceiveCount 3) so a poison message can't retry forever
+- [x] Poller Lambda publishes diffed events to SQS (`backend/src/poller/app.py`, tested with mocked `boto3.client("sqs")`)
+- [x] Push Lambda (`backend/src/push/app.py`) — SQS-triggered, scans `LeagueConfig` for registered device tokens, calls APNs directly via token-based auth (`backend/src/apns.py`: `.p8` key signs a JWT, HTTP/2 POST to Apple). Reports partial batch failures (`ReportBatchItemFailures`) so one bad message doesn't fail the whole batch.
+- [x] `template.yaml`: `ScoringEventsQueue` + DLQ, `PushFunction` (SQS event source), new `Apns*` parameters (`NoEcho` for the private key)
+- [x] `sam validate --lint` and `sam build` both pass with the new resources
+- [x] Handler logic unit-tested with pytest + mocked boto3/APNs (12 new tests: apns JWT construction against a disposable throwaway keypair, push handler, poller's SQS publish)
+- [ ] **APNs certs/keys, sandbox testing — genuinely blocked, not just deferred.** Needs a real Apple Developer account, a registered `.p8` auth key, and a real device token — the last of which only exists once there's an iOS app (Phase 6) that's registered for push. Circular dependency with Phase 6, not just a "do it later" item.
+- [x] CloudWatch billing alarm at $5, with an SNS email subscription (`AlertEmail` parameter — no default, must be supplied at deploy time, not hardcoded into a committed template). Note: AWS billing metrics only publish to `us-east-1` CloudWatch regardless of deploy region — deploy the whole stack there to keep this alarm working without a separate cross-region stack.
 
 ## Phase 5 — Sleeper import (parallelizable with 1–4)
 - [ ] Sleeper API adapter (read-only, no auth)
@@ -54,7 +57,7 @@ Task checklist tracking progress against [DESIGN.md](DESIGN.md)'s Build order. P
 Gaps noticed in DESIGN.md's architecture — not blocking, but need a decision before the phase that hits them:
 
 - **No API surface for the iOS client to write `LeagueConfig`.** DESIGN.md's backend section covers the poll → diff → push path but never specifies how a user's league import / custom point values get from the phone to DynamoDB. Likely needs an API Gateway + Lambda (or Lambda Function URL) for this CRUD path. Resolve by Phase 5.
-- **No device-token registration path.** Push delivery (Phase 4) needs to know each user's APNs device token, but nothing in DESIGN.md's architecture describes how that gets registered/stored. Likely lives on the same API surface as the point above. Resolve by Phase 4.
+- **No device-token registration path.** Push Lambda (`push/app.py`) now assumes a `deviceToken` attribute on `LeagueConfig` items and scans for it, but nothing writes that attribute yet — same missing API surface as the point above. Right now the push fan-out is correct code with permanently empty input until that's built. Resolve by Phase 5 (or whenever the API surface above lands).
 - **Fantasy point computation and per-player scoring attribution isn't designed yet.** `ScoringEvent` carries the raw play (all `player_ids` involved, `scoring_type`, `description`) but Tank01 doesn't reliably mark which one is "the" scorer for fantasy purposes (a passing TD's `playerIDs` order is `[passer, receiver, kicker]`, a rushing TD's is `[rusher, kicker]` — inconsistent). Computing actual per-user point values against `LeagueConfig`'s custom settings, and deciding how to attribute points across multiple players on one play, needs its own design pass. Resolve by Phase 3/4 (poller needs this before it has anything meaningful to push).
 - **Checker's "which game to track" is a placeholder, not the real per-user selection.** DESIGN.md wants "user-selected, or auto-selected as the highest-scoring active game in their league" — that needs per-user league context (Sleeper import, Phase 5) plus a box-score call per live-game candidate just to rank them by score, which isn't built and would burn Tank01 budget fast. `checker/app.py`'s `_pick_game_to_track` currently just takes the first live game in provider list order, globally, for everyone. Resolve once Phase 5 (Sleeper import) and the missing API surface (above) exist — this is the same underlying gap, just showing up in the checker too.
 - **Box-score status strings beyond "Completed" are unverified.** The only real data seen so far is one finished game (`gameStatus: "Completed"` from `getNFLBoxScore`). The poller's `is_final` check assumes `{"completed", "final"}` covers it, but in-progress/scheduled/postponed/suspended status strings from *this specific endpoint* haven't been observed — Tank01's games-list endpoint uses different strings ("Final") for the same finished game, so box-score values aren't guaranteed to match. Confirm once this runs against a real live game.

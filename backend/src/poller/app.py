@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import logging
 import os
 
@@ -8,6 +9,7 @@ import boto3
 import storage
 from adapters.tank01 import fetch_game_state
 from diffing import new_events
+from models import ScoringEvent
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
@@ -36,7 +38,7 @@ def handler(event, context):
 
     for scoring_event in events:
         logger.info("new scoring event: %s", scoring_event.description)
-        # TODO(Phase 4): publish to SQS for push fan-out.
+        _publish(scoring_event)
 
     table.put_item(Item=storage.to_item(current))
 
@@ -47,3 +49,24 @@ def handler(event, context):
 def _table():
     dynamodb = boto3.resource("dynamodb")
     return dynamodb.Table(os.environ["LIVE_GAME_STATE_TABLE"])
+
+
+def _publish(scoring_event: ScoringEvent) -> None:
+    sqs = boto3.client("sqs")
+    sqs.send_message(
+        QueueUrl=os.environ["SCORING_EVENTS_QUEUE_URL"],
+        MessageBody=json.dumps(
+            {
+                "event_id": scoring_event.event_id,
+                "game_id": scoring_event.game_id,
+                "team": scoring_event.team,
+                "scoring_type": scoring_event.scoring_type,
+                "description": scoring_event.description,
+                "period": scoring_event.period,
+                "game_clock": scoring_event.game_clock,
+                "home_score": scoring_event.home_score,
+                "away_score": scoring_event.away_score,
+                "player_ids": list(scoring_event.player_ids),
+            }
+        ),
+    )

@@ -12,6 +12,27 @@ Parameters:
     Type: String
     NoEcho: true
     Description: RapidAPI key for the Tank01 NFL API (tank01-nfl-live-in-game-real-time-statistics-nfl)
+  ApnsTeamId:
+    Type: String
+    Description: Apple Developer Team ID, for APNs token-based auth
+  ApnsKeyId:
+    Type: String
+    Description: Key ID of the APNs auth key (.p8)
+  ApnsPrivateKey:
+    Type: String
+    NoEcho: true
+    Description: Contents of the APNs .p8 auth key file
+  ApnsBundleId:
+    Type: String
+    Description: iOS app's bundle identifier (APNs topic)
+  ApnsSandbox:
+    Type: String
+    Default: "true"
+    AllowedValues: ["true", "false"]
+    Description: Use APNs sandbox (development builds) vs production
+  AlertEmail:
+    Type: String
+    Description: Email address to notify if the CloudWatch billing alarm fires. NOTE — AWS billing metrics only publish to us-east-1 CloudWatch regardless of which region you deploy this stack to; deploy in us-east-1 to keep this alarm working without a separate cross-region stack.
 
 Globals:
   Function:
@@ -46,6 +67,21 @@ Resources:
         AttributeName: expiresAt
         Enabled: true
 
+  ScoringEventsDLQ:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: fantasee-scoring-events-dlq
+      MessageRetentionPeriod: 1209600 # 14 days
+
+  ScoringEventsQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: fantasee-scoring-events
+      VisibilityTimeout: 60
+      RedrivePolicy:
+        deadLetterTargetArn: !GetAtt ScoringEventsDLQ.Arn
+        maxReceiveCount: 3
+
   PollerFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -54,9 +90,37 @@ Resources:
       Environment:
         Variables:
           LIVE_GAME_STATE_TABLE: !Ref LiveGameStateTable
+          SCORING_EVENTS_QUEUE_URL: !Ref ScoringEventsQueue
       Policies:
         - DynamoDBCrudPolicy:
             TableName: !Ref LiveGameStateTable
+        - SQSSendMessagePolicy:
+            QueueName: !GetAtt ScoringEventsQueue.QueueName
+
+  PushFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/
+      Handler: push.app.handler
+      Environment:
+        Variables:
+          LEAGUE_CONFIG_TABLE: !Ref LeagueConfigTable
+          APNS_TEAM_ID: !Ref ApnsTeamId
+          APNS_KEY_ID: !Ref ApnsKeyId
+          APNS_PRIVATE_KEY: !Ref ApnsPrivateKey
+          APNS_BUNDLE_ID: !Ref ApnsBundleId
+          APNS_SANDBOX: !Ref ApnsSandbox
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref LeagueConfigTable
+      Events:
+        ScoringEvents:
+          Type: SQS
+          Properties:
+            Queue: !GetAtt ScoringEventsQueue.Arn
+            BatchSize: 10
+            FunctionResponseTypes:
+              - ReportBatchItemFailures
 
   PollerStateMachine:
     Type: AWS::Serverless::StateMachine
@@ -89,14 +153,54 @@ Resources:
             Description: Checks every ~15 min whether a game is live
             Enabled: true
 
+  # Cost guardrail: fires if estimated AWS charges exceed $5, so a polling
+  # bug can't silently rack up cost. Requires "Receive Billing Alerts" to
+  # be enabled once, manually, in the account's Billing preferences — it's
+  # an account-level setting CloudFormation can't turn on for you.
+  BillingAlarmTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: fantasee-billing-alerts
+
+  BillingAlarmSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      TopicArn: !Ref BillingAlarmTopic
+      Protocol: email
+      Endpoint: !Ref AlertEmail
+
+  BillingAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: fantasee-billing-guardrail
+      AlarmDescription: Estimated AWS charges exceeded $5.
+      Namespace: AWS/Billing
+      MetricName: EstimatedCharges
+      Dimensions:
+        - Name: Currency
+          Value: USD
+      Statistic: Maximum
+      Period: 21600 # 6 hours — the billing metric only updates a few times/day
+      EvaluationPeriods: 1
+      Threshold: 5
+      ComparisonOperator: GreaterThanThreshold
+      AlarmActions:
+        - !Ref BillingAlarmTopic
+
 Outputs:
   LeagueConfigTableName:
     Value: !Ref LeagueConfigTable
   LiveGameStateTableName:
     Value: !Ref LiveGameStateTable
+  ScoringEventsQueueUrl:
+    Value: !Ref ScoringEventsQueue
   PollerStateMachineArn:
     Value: !Ref PollerStateMachine
   CheckerFunctionName:
     Value: !Ref CheckerFunction
   PollerFunctionName:
     Value: !Ref PollerFunction
+  PushFunctionName:
+    Value: !Ref PushFunction
+  BillingAlarmTopicArn:
+    Value: !Ref BillingAlarmTopic

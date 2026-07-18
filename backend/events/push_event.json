@@ -1,0 +1,15 @@
+{
+  "Records": [
+    {
+      "messageId": "test-message-1",
+      "receiptHandle": "test-receipt-handle",
+      "body": "{\"event_id\": \"20260104_NYJ@BUF:Q1:8:17:BUF:TD\", \"game_id\": \"20260104_NYJ@BUF\", \"team\": \"BUF\", \"scoring_type\": \"TD\", \"description\": \"Dawson Knox 17 Yd pass from Mitchell Trubisky (Matt Prater Kick)\", \"period\": \"Q1\", \"game_clock\": \"8:17\", \"home_score\": 7, \"away_score\": 0, \"player_ids\": [\"3039707\", \"3930086\", \"11122\"]}",
+      "attributes": {},
+      "messageAttributes": {},
+      "md5OfBody": "",
+      "eventSource": "aws:sqs",
+      "eventSourceARN": "arn:aws:sqs:us-east-1:000000000000:fantasee-scoring-events",
+      "awsRegion": "us-east-1"
+    }
+  ]
+}
