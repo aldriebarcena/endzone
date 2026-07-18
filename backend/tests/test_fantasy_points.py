@@ -3,9 +3,10 @@ from pathlib import Path
 
 import pytest
 
-from adapters.espn import parse_scoring_plays
+from adapters.espn import EspnScoringPlay, parse_scoring_plays
 from adapters.tank01 import extract_player_categories, extract_player_names, parse_box_score
-from fantasy_points import compute_points, infer_roles, match_espn_play
+from fantasy_points import compute_points, infer_roles, match_espn_play, points_for_matched_play
+from models import ScoringEvent
 
 TANK01_FIXTURE = json.loads(
     (Path(__file__).parent / "fixtures" / "tank01_box_score_final.json").read_text()
@@ -85,10 +86,92 @@ def test_infer_roles_falls_back_to_first_candidate_when_text_has_no_match():
 
 
 def test_unhandled_play_type_returns_empty():
-    # A field goal isn't in PLAY_TYPE_ROLES (unverified — no real sample
-    # observed yet). Should return {} rather than guess or crash.
+    # A safety isn't in PLAY_TYPE_ROLES — individual-defender attribution
+    # is a genuinely undesigned scoring model, not just unverified data
+    # (see fantasy_points.py's module docstring). Should return {} rather
+    # than guess or crash.
     fake_event = _event_by_description("Dawson Knox")
     empty_espn_plays = ()
     assert compute_points(fake_event, empty_espn_plays, PLAYER_CATEGORIES, PLAYER_NAMES, POINT_VALUES) == {}
+
+
+# Field goal yardage/point-tier data below (40/57/25 yards -> 4.0/5.0/3.0
+# pts) is real: pulled live from three actual NFL games' ESPN play-by-play
+# during this project (see PROJECT_PLAN.md), cross-checked against those
+# plays' real text descriptions ("T.Loop 40 yard field goal is GOOD" etc).
+# No matching Tank01 sample exists for these specific plays (our one real
+# Tank01 fixture game had zero field goals), so the ScoringEvent/
+# player_categories/player_names below are constructed by hand rather
+# than pulled from a fixture — the play-type/yardage/point-tier values
+# they're tested against are real; the surrounding Tank01-side wiring is
+# not independently confirmed.
+def _kicker_event(**overrides):
+    fields = dict(
+        event_id="game-1:Q2:13:33:BAL:FG",
+        game_id="game-1",
+        team="BAL",
+        scoring_type="FG",
+        description="T.Loop 40 yard field goal is GOOD",
+        period="Q2",
+        game_clock="13:33",
+        home_score=0,
+        away_score=10,
+        player_ids=("kicker-1",),
+        fetched_at=GAME_STATE.fetched_at,
+    )
+    fields.update(overrides)
+    return ScoringEvent(**fields)
+
+
+def _kicker_categories():
+    return {"kicker-1": frozenset({"Kicking"})}
+
+
+def test_field_goal_40_yards_uses_the_40_49_tier():
+    event = _kicker_event()
+    espn_play = EspnScoringPlay(
+        play_type="Field Goal Good",
+        text="T.Loop 40 yard field goal is GOOD, Center-N.Moore, Holder-J.Stout.",
+        yardage=40,
+        team="BAL",
+        period=2,
+        clock="13:33",
+    )
+    points = points_for_matched_play(
+        event, espn_play, _kicker_categories(), {"kicker-1": "Tyler Loop"}, POINT_VALUES
+    )
+    assert points == {"kicker-1": 4.0}  # real Sleeper fgm_40_49 rate
+
+
+def test_field_goal_57_yards_uses_the_50_plus_tier():
+    event = _kicker_event(game_clock="8:52", description="C.Boswell 57 yard field goal is GOOD")
+    espn_play = EspnScoringPlay(
+        play_type="Field Goal Good",
+        text="C.Boswell 57 yard field goal is GOOD, Center-C.Kuntz, Holder-C.Waitman.",
+        yardage=57,
+        team="BAL",
+        period=2,
+        clock="8:52",
+    )
+    points = points_for_matched_play(
+        event, espn_play, _kicker_categories(), {"kicker-1": "Cade Boswell"}, POINT_VALUES
+    )
+    assert points == {"kicker-1": 5.0}  # real Sleeper fgm_50p rate
+
+
+def test_field_goal_25_yards_uses_the_20_29_tier():
+    event = _kicker_event(game_clock="4:28", description="C.Boswell 25 yard field goal is GOOD")
+    espn_play = EspnScoringPlay(
+        play_type="Field Goal Good",
+        text="C.Boswell 25 yard field goal is GOOD, Center-C.Kuntz, Holder-C.Waitman.",
+        yardage=25,
+        team="BAL",
+        period=3,
+        clock="4:28",
+    )
+    points = points_for_matched_play(
+        event, espn_play, _kicker_categories(), {"kicker-1": "Cade Boswell"}, POINT_VALUES
+    )
+    assert points == {"kicker-1": 3.0}  # real Sleeper fgm_20_29 rate
 
 

@@ -81,6 +81,7 @@ def parse_box_score(box_score: dict) -> GameState:
     return GameState(
         game_id=box_score["gameID"],
         status=box_score["gameStatus"],
+        status_code=int(box_score["gameStatusCode"]),
         home_team=box_score["home"],
         away_team=box_score["away"],
         home_score=int(box_score["homePts"]),

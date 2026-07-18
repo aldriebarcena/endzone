@@ -31,6 +31,13 @@ class ScoringEvent:
 class GameState:
     game_id: str
     status: str
+    # Tank01's documented numeric enum (0 not started, 1 in progress,
+    # 2 final, 3 postponed, 4 suspended) — same meaning across every
+    # Tank01 endpoint per their docs, unlike `status` (free text: seen
+    # both "Completed" from getNFLBoxScore and "Final" from
+    # getNFLGamesForDate for the same finished game). Use this field for
+    # any "is the game over" logic, not `status`.
+    status_code: int
     home_team: str
     away_team: str
     home_score: int

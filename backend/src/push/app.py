@@ -3,19 +3,23 @@ from __future__ import annotations
 import json
 import logging
 import os
+from datetime import datetime, timezone
 
 import boto3
 
+from adapters.espn import EspnScoringPlay
 from apns import build_auth_token, send_push
+from fantasy_points import points_for_matched_play
+from models import ScoringEvent
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 
 def handler(event, context):
-    device_tokens = _subscribed_device_tokens()
+    subscribers = _subscribers()
 
-    if not device_tokens:
+    if not subscribers:
         logger.info("no subscribers with a registered device token, nothing to push")
         return {"batchItemFailures": []}
 
@@ -28,7 +32,7 @@ def handler(event, context):
     failures = []
     for record in event.get("Records", []):
         try:
-            _process_record(record, device_tokens, auth_token)
+            _process_record(record, subscribers, auth_token)
         except Exception:
             logger.exception("failed to process record %s", record.get("messageId"))
             failures.append({"itemIdentifier": record["messageId"]})
@@ -36,17 +40,32 @@ def handler(event, context):
     return {"batchItemFailures": failures}
 
 
-def _process_record(record: dict, device_tokens: list[str], auth_token: str) -> None:
-    scoring_event = json.loads(record["body"])
-    title = f"{scoring_event['team']} — {scoring_event['scoring_type']}"
-    # Fantasy point value isn't included: it's league-dependent (custom
-    # scoring settings) and that computation isn't designed yet — see
-    # PROJECT_PLAN.md open questions. Raw play description stands in for now.
-    body = scoring_event["description"]
+def _process_record(record: dict, subscribers: list[dict], auth_token: str) -> None:
+    message = json.loads(record["body"])
+    scoring_event = _event_from_message(message)
+    espn_play = _espn_play_from_message(message.get("espn_play"))
+    player_categories = {
+        player_id: frozenset(categories)
+        for player_id, categories in message.get("player_categories", {}).items()
+    }
+    player_names = message.get("player_names", {})
+    title = f"{scoring_event.team} — {scoring_event.scoring_type}"
 
-    for device_token in device_tokens:
+    for subscriber in subscribers:
+        # Personalized per subscriber, not computed once upstream in
+        # poller.py — different subscribers can have different leagues
+        # with different pointValues, so the same play is worth different
+        # amounts to different people. See PROJECT_PLAN.md open questions.
+        points: dict[str, float] = {}
+        if espn_play is not None:
+            points = points_for_matched_play(
+                scoring_event, espn_play, player_categories, player_names,
+                subscriber.get("pointValues", {}),
+            )
+        body = _format_body(scoring_event, points, player_names)
+
         response = send_push(
-            device_token,
+            subscriber["deviceToken"],
             title=title,
             body=body,
             bundle_id=os.environ["APNS_BUNDLE_ID"],
@@ -56,20 +75,63 @@ def _process_record(record: dict, device_tokens: list[str], auth_token: str) -> 
         if response.status_code != 200:
             logger.warning(
                 "APNs push failed for %s: %s %s",
-                device_token,
+                subscriber["deviceToken"],
                 response.status_code,
                 response.text,
             )
 
 
-def _subscribed_device_tokens() -> list[str]:
+def _format_body(scoring_event: ScoringEvent, points: dict[str, float], player_names: dict[str, str]) -> str:
+    if not points:
+        return scoring_event.description
+    breakdown = ", ".join(
+        f"{player_names.get(player_id, player_id)} +{value:g} pts"
+        for player_id, value in points.items()
+    )
+    return f"{scoring_event.description} ({breakdown})"
+
+
+def _event_from_message(message: dict) -> ScoringEvent:
+    # fetched_at isn't semantically meaningful on a reconstructed event
+    # (the real fetch happened in poller.py) — fantasy_points.py doesn't
+    # read it, it's only here to satisfy the dataclass.
+    return ScoringEvent(
+        event_id=message["event_id"],
+        game_id=message["game_id"],
+        team=message["team"],
+        scoring_type=message["scoring_type"],
+        description=message["description"],
+        period=message["period"],
+        game_clock=message["game_clock"],
+        home_score=message["home_score"],
+        away_score=message["away_score"],
+        player_ids=tuple(message.get("player_ids", ())),
+        fetched_at=datetime.now(timezone.utc),
+    )
+
+
+def _espn_play_from_message(data: dict | None) -> EspnScoringPlay | None:
+    if data is None:
+        return None
+    return EspnScoringPlay(
+        play_type=data["play_type"],
+        text=data["text"],
+        yardage=data["yardage"],
+        team=data["team"],
+        period=data["period"],
+        clock=data["clock"],
+    )
+
+
+def _subscribers() -> list[dict]:
     # Scan is fine at portfolio scale (single-digit to low-dozens of
     # users); would need a GSI on deviceToken, or a dedicated table, if
-    # this ever needed to scale further. No write path for deviceToken
-    # exists yet either — see PROJECT_PLAN.md's API-surface open question.
+    # this ever needed to scale further.
     dynamodb = boto3.resource("dynamodb")
     table = dynamodb.Table(os.environ["LEAGUE_CONFIG_TABLE"])
     response = table.scan()
     return [
-        item["deviceToken"] for item in response.get("Items", []) if item.get("deviceToken")
+        {"deviceToken": item["deviceToken"], "pointValues": item.get("pointValues", {})}
+        for item in response.get("Items", [])
+        if item.get("deviceToken")
     ]

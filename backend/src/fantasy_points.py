@@ -5,21 +5,41 @@ import re
 from adapters.espn import EspnScoringPlay
 from models import ScoringEvent
 
-# Only verified against real data: passing and rushing touchdowns (see
-# PROJECT_PLAN.md). Field goals, safeties, defensive/special-teams TDs,
-# and two-point conversions themselves are real ESPN play types this
-# project hasn't observed samples of yet — extending this mapping
-# without real data would be guessing, which this project has
-# specifically tried to avoid throughout (see DESIGN.md's provider-
-# verification history).
+# Verified against real ESPN data (live API calls against real games, not
+# guessed): passing/rushing TDs against the original 6-play sample game,
+# plus "Field Goal Good" (id 59) confirmed across three other real games
+# with statYardage matching the actual kick distance (40/57/25 yards,
+# cross-checked against those games' real text descriptions). Safeties,
+# defensive/special-teams TDs, and interception/fumble returns (ids 20,
+# 36, 39 — also confirmed real) are deliberately NOT mapped: they need
+# individual-defender attribution, and this project has zero Tank01 data
+# showing what category name (if any) Tank01 gives defensive players —
+# no sample game with a defensive score has been observed. Unlike the
+# offense/kicking cases, that's not a "haven't gotten to it" gap, it's an
+# undesigned scoring model (team-defense vs. individual-defender credit
+# isn't even decided) — extending PLAY_TYPE_ROLES to cover it would be
+# guessing on two fronts at once, which this project has consistently
+# avoided (see DESIGN.md's provider-verification history).
+FIELD_GOAL_PLAY_TYPE = "Field Goal Good"
+
 PLAY_TYPE_ROLES: dict[str, tuple[str, ...]] = {
     "Passing Touchdown": ("Passing", "Receiving"),
     "Rushing Touchdown": ("Rushing",),
+    FIELD_GOAL_PLAY_TYPE: ("Kicking",),
 }
 
 YARDAGE_STAT_BY_ROLE = {"Passing": "pass_yd", "Rushing": "rush_yd", "Receiving": "rec_yd"}
 TOUCHDOWN_STAT_BY_ROLE = {"Passing": "pass_td", "Rushing": "rush_td", "Receiving": "rec_td"}
 RECEPTION_STAT = "rec"
+
+# Sleeper's real scoring_settings tier field goals by distance rather
+# than a flat per-yard rate (confirmed real: fgm_0_19, fgm_20_29,
+# fgm_30_39: 3.0 each; fgm_40_49: 4.0; fgm_50p: 5.0) — a fundamentally
+# different shape than the yardage*rate model touchdowns use, so field
+# goals get their own computation path below rather than reusing
+# YARDAGE_STAT_BY_ROLE.
+_FIELD_GOAL_TIERS = ((19, "fgm_0_19"), (29, "fgm_20_29"), (39, "fgm_30_39"), (49, "fgm_40_49"))
+_FIELD_GOAL_50_PLUS_KEY = "fgm_50p"
 
 # Matches ESPN's standardized NFL-gamebook phrasing: "... to G.Davis for
 # 2 yards, TOUCHDOWN." Only verified for the passing-TD case — a play
@@ -104,9 +124,9 @@ def infer_roles(
     return assigned
 
 
-def compute_points(
+def points_for_matched_play(
     event: ScoringEvent,
-    espn_plays: tuple[EspnScoringPlay, ...],
+    espn_play: EspnScoringPlay,
     player_categories: dict[str, frozenset[str]],
     player_names: dict[str, str],
     point_values: dict[str, float],
@@ -114,16 +134,23 @@ def compute_points(
     """player_id -> fantasy points earned from this specific scoring
     play, using the league's real point_values (e.g. Sleeper's
     scoring_settings). Returns {} for anything not in PLAY_TYPE_ROLES —
-    logged upstream as unhandled rather than guessed at.
+    logged upstream as unhandled rather than guessed at. Split out from
+    compute_points() so a caller that's already matched the play (poller
+    matches once; push.py reuses that match per-subscriber rather than
+    re-matching against the full espn_plays list every time) can skip
+    straight to this step.
     """
-    espn_play = match_espn_play(event, espn_plays)
-    if espn_play is None or espn_play.play_type not in PLAY_TYPE_ROLES:
+    if espn_play.play_type not in PLAY_TYPE_ROLES:
         return {}
 
     roles = PLAY_TYPE_ROLES[espn_play.play_type]
     role_assignments = infer_roles(
         event.player_ids, player_categories, player_names, roles, espn_play.text
     )
+
+    if espn_play.play_type == FIELD_GOAL_PLAY_TYPE:
+        return _field_goal_points(role_assignments, espn_play.yardage, point_values)
+
     is_touchdown = espn_play.play_type.endswith("Touchdown")
 
     points: dict[str, float] = {}
@@ -144,3 +171,27 @@ def compute_points(
 
         points[player_id] = round(role_points, 2)
     return points
+
+
+def _field_goal_points(
+    role_assignments: dict[str, str], yardage: int, point_values: dict[str, float]
+) -> dict[str, float]:
+    kicker_id = role_assignments.get("Kicking")
+    if kicker_id is None:
+        return {}
+    key = next((key for max_yards, key in _FIELD_GOAL_TIERS if yardage <= max_yards), _FIELD_GOAL_50_PLUS_KEY)
+    return {kicker_id: round(point_values.get(key, 0.0), 2)}
+
+
+def compute_points(
+    event: ScoringEvent,
+    espn_plays: tuple[EspnScoringPlay, ...],
+    player_categories: dict[str, frozenset[str]],
+    player_names: dict[str, str],
+    point_values: dict[str, float],
+) -> dict[str, float]:
+    """Convenience wrapper: match_espn_play() + points_for_matched_play()."""
+    espn_play = match_espn_play(event, espn_plays)
+    if espn_play is None:
+        return {}
+    return points_for_matched_play(event, espn_play, player_categories, player_names, point_values)

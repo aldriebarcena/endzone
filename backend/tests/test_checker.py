@@ -4,9 +4,9 @@ from unittest.mock import MagicMock, patch
 from checker.app import _pick_game_to_track, handler
 
 LIVE_GAMES = [
-    {"gameID": "20260101_AAA@BBB", "gameStatusCode": "2"},
-    {"gameID": "20260101_CCC@DDD", "gameStatusCode": "1"},
-    {"gameID": "20260101_EEE@FFF", "gameStatusCode": "0"},
+    {"gameID": "20260101_AAA@BBB", "gameStatusCode": "2", "espnID": "401700001"},
+    {"gameID": "20260101_CCC@DDD", "gameStatusCode": "1", "espnID": "401700002"},
+    {"gameID": "20260101_EEE@FFF", "gameStatusCode": "0", "espnID": "401700003"},
 ]
 
 
@@ -33,7 +33,10 @@ def test_handler_starts_execution_for_live_game(mock_fetch, mock_boto_client, mo
     mock_sfn.start_execution.assert_called_once()
     _, kwargs = mock_sfn.start_execution.call_args
     assert kwargs["name"] == "20260101_CCC@DDD"
-    assert json.loads(kwargs["input"]) == {"game_id": "20260101_CCC@DDD"}
+    assert json.loads(kwargs["input"]) == {
+        "game_id": "20260101_CCC@DDD",
+        "espn_game_id": "401700002",
+    }
 
 
 @patch("checker.app.boto3.client")

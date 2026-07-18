@@ -12,6 +12,7 @@ def to_item(state: GameState) -> dict:
     return {
         "gameId": state.game_id,
         "status": state.status,
+        "statusCode": state.status_code,
         "homeTeam": state.home_team,
         "awayTeam": state.away_team,
         "homeScore": state.home_score,
@@ -28,6 +29,7 @@ def from_item(item: dict) -> GameState:
     return GameState(
         game_id=item["gameId"],
         status=item["status"],
+        status_code=int(item["statusCode"]),
         home_team=item["homeTeam"],
         away_team=item["awayTeam"],
         home_score=int(item["homeScore"]),

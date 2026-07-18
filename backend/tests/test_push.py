@@ -75,6 +75,78 @@ def test_no_subscribers_is_a_noop(mock_resource, mock_build_token, mock_send_pus
 @patch("push.app.send_push")
 @patch("push.app.build_auth_token")
 @patch("push.app.boto3.resource")
+def test_personalizes_points_per_subscriber_point_values(
+    mock_resource, mock_build_token, mock_send_push, monkeypatch
+):
+    # Same play, two subscribers with different league scoring settings —
+    # this is the whole reason point computation moved to push.py instead
+    # of poller.py computing one canonical number.
+    _env(monkeypatch)
+    message = {
+        **EVENT_BODY,
+        "espn_play": {
+            "play_type": "Passing Touchdown",
+            "text": "M.Trubisky pass deep right to D.Knox for 17 yards, TOUCHDOWN.",
+            "yardage": 17,
+            "team": "BUF",
+            "period": 1,
+            "clock": "8:17",
+        },
+        "player_categories": {"3039707": ["Passing"], "3930086": ["Receiving"]},
+        "player_names": {"3039707": "Mitchell Trubisky", "3930086": "Dawson Knox"},
+    }
+    mock_table = MagicMock()
+    mock_table.scan.return_value = {
+        "Items": [
+            {
+                "userId": "u1",
+                "deviceToken": "token-1",
+                "pointValues": {"pass_yd": 0.04, "pass_td": 6.0, "rec_yd": 0.1, "rec_td": 6.0, "rec": 1.0},
+            },
+            {
+                "userId": "u2",
+                "deviceToken": "token-2",
+                "pointValues": {"pass_yd": 0.04, "pass_td": 4.0, "rec_yd": 0.1, "rec_td": 6.0, "rec": 1.0},
+            },
+        ]
+    }
+    mock_resource.return_value.Table.return_value = mock_table
+    mock_build_token.return_value = "fake-jwt"
+    mock_send_push.return_value = MagicMock(status_code=200)
+
+    record = {"messageId": "msg-1", "body": json.dumps(message)}
+    handler({"Records": [record]}, None)
+
+    assert mock_send_push.call_count == 2
+    bodies = [call.kwargs["body"] for call in mock_send_push.call_args_list]
+    assert any("Mitchell Trubisky +6.68 pts" in body for body in bodies)
+    assert any("Mitchell Trubisky +4.68 pts" in body for body in bodies)
+
+
+@patch("push.app.send_push")
+@patch("push.app.build_auth_token")
+@patch("push.app.boto3.resource")
+def test_no_espn_play_falls_back_to_plain_description(
+    mock_resource, mock_build_token, mock_send_push, monkeypatch
+):
+    _env(monkeypatch)
+    mock_table = MagicMock()
+    mock_table.scan.return_value = {
+        "Items": [{"userId": "u1", "deviceToken": "token-1", "pointValues": {"pass_td": 6.0}}]
+    }
+    mock_resource.return_value.Table.return_value = mock_table
+    mock_build_token.return_value = "fake-jwt"
+    mock_send_push.return_value = MagicMock(status_code=200)
+
+    handler({"Records": [_sqs_record()]}, None)
+
+    body = mock_send_push.call_args.kwargs["body"]
+    assert body == EVENT_BODY["description"]
+
+
+@patch("push.app.send_push")
+@patch("push.app.build_auth_token")
+@patch("push.app.boto3.resource")
 def test_malformed_record_reported_as_batch_item_failure(
     mock_resource, mock_build_token, mock_send_push, monkeypatch
 ):

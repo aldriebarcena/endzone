@@ -32,6 +32,7 @@ def test_game_state_construction():
     state = GameState(
         game_id="game-1",
         status="In Progress",
+        status_code=1,
         home_team="BUF",
         away_team="NYJ",
         home_score=7,
@@ -49,6 +50,7 @@ def test_game_state_can_have_no_events_yet():
     state = GameState(
         game_id="game-1",
         status="scheduled",
+        status_code=0,
         home_team="BUF",
         away_team="NYJ",
         home_score=0,
