@@ -3,7 +3,9 @@
 ## Goal
 A full-stack iPhone app (like theRealApp, but fantasy-football-flavored): live game feed re-displayed as fantasy scoring events ("___ scored a TD, +7 pts"), with user-configurable league point settings and league import.
 
-Purpose: new-grad portfolio project. Fills resume gaps (client-facing app, real-time systems, cloud infra) and builds Swift/iOS familiarity. Secondary goal: usable as a real production app later, but that decision is deferred — architecture should support it without committing to its costs now.
+Purpose: new-grad portfolio project. Fills resume gaps (client-facing app, real-time systems, cloud infra) and builds Swift/iOS familiarity.
+
+**Scope decision: this will not be deployed to production.** It's a code/architecture/interview artifact — the thing that gets shown and discussed is the repo itself (tests, design decisions, real-data verification) plus a runnable iOS Simulator demo (stubbed against fake data, per the iOS client section below), not a live running service. The backend is still built and described as real, deployable infrastructure (SAM template, real IAM policies, a genuine cost guardrail) because *designing it that way* is itself the resume-relevant work and the interview story ("here's how I'd deploy this, here's why Step Functions over a second EventBridge rule") — but actually deploying it to AWS is optional, not a completion requirement. AWS credentials/`sam deploy` remain available to do later if wanted (e.g. to demo real push delivery once there's a physical device to test APNs against, which Simulator can't do), but nothing in the plan depends on it happening.
 
 ---
 

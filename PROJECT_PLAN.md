@@ -25,8 +25,8 @@ Task checklist tracking progress against [DESIGN.md](DESIGN.md)'s Build order. P
 - [x] AWS CLI + SAM CLI installed; `sam validate --lint` and `sam build` both succeed. Confirmed the built package layout (flat `checker/`, `poller/`, `adapters/`, `models.py`, etc. per function) resolves imports correctly by running the built `checker` package directly.
 - [x] Handler logic unit-tested with pytest + mocked boto3 (11 new tests: checker, poller, storage round-trip) — no Docker needed for this
 - [x] `sam local invoke CheckerFunction` — Docker installed and running; ran in a real Lambda container against the live Tank01 API, correctly found no live games (NFL off-season) and returned `{"started": false}` without ever needing AWS credentials (short-circuits before touching Step Functions)
-- [ ] `sam local invoke PollerFunction` — deferred; needs AWS credentials configured (DynamoDB calls), which aren't set up yet. Poller logic is already covered by the 11 mocked pytest tests in the meantime.
-- [ ] `sam deploy --guided` — not run yet (creates real billed AWS resources; needs AWS credentials configured and explicit go-ahead first)
+- [ ] `sam local invoke PollerFunction` — optional, not required. Needs AWS credentials (DynamoDB calls). Poller logic is already covered by mocked pytest tests either way. Per DESIGN.md's scope decision, this project won't be deployed to production — do this later only if you want to demo real AWS behavior, not because it's blocking anything.
+- [ ] `sam deploy --guided` — optional, not required, same reasoning. The SAM template is real, deployable infrastructure (that's the resume-relevant design work); actually deploying it is no longer a completion requirement.
 
 ## Phase 4 — SQS + push Lambda + APNs fan-out
 - [x] SQS queue for "new scoring event detected", with a DLQ (maxReceiveCount 3) so a poison message can't retry forever
@@ -35,7 +35,7 @@ Task checklist tracking progress against [DESIGN.md](DESIGN.md)'s Build order. P
 - [x] `template.yaml`: `ScoringEventsQueue` + DLQ, `PushFunction` (SQS event source), new `Apns*` parameters (`NoEcho` for the private key)
 - [x] `sam validate --lint` and `sam build` both pass with the new resources
 - [x] Handler logic unit-tested with pytest + mocked boto3/APNs (12 new tests: apns JWT construction against a disposable throwaway keypair, push handler, poller's SQS publish)
-- [ ] **APNs certs/keys, sandbox testing — genuinely blocked, not just deferred.** Needs a real Apple Developer account, a registered `.p8` auth key, and a real device token — the last of which only exists once there's an iOS app (Phase 6) that's registered for push. Circular dependency with Phase 6, not just a "do it later" item.
+- [ ] **APNs certs/keys, sandbox testing — genuinely blocked, and now optional too.** Needs a real Apple Developer account, a registered `.p8` auth key, and a real device token — the last of which only exists on a physical device (iOS Simulator can't register for real remote push at all). Per DESIGN.md's scope decision, the demoable artifact is the iOS Simulator, so this isn't required for the project to be "done" — only relevant if a physical device becomes available later and real end-to-end push delivery is worth showing.
 - [x] CloudWatch billing alarm at $5, with an SNS email subscription (`AlertEmail` parameter — no default, must be supplied at deploy time, not hardcoded into a committed template). Note: AWS billing metrics only publish to `us-east-1` CloudWatch regardless of deploy region — deploy the whole stack there to keep this alarm working without a separate cross-region stack.
 
 ## Phase 5 — Sleeper import (parallelizable with 1–4)
