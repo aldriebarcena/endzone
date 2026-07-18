@@ -1,0 +1,716 @@
+{
+  "statusCode": 200,
+  "body": {
+    "Referees": "Greg Bradley, Paul King, Dale Shaw, John Jenkins, Alan Eck, David Oliver, Grantis Bell",
+    "arena": "Highmark Stadium",
+    "arenaCapacity": "71,621",
+    "attendance": "70,944",
+    "away": "NYJ",
+    "awayPts": "8",
+    "awayResult": "L",
+    "currentPeriod": "Final",
+    "gameClock": "",
+    "gameDate": "20260104",
+    "gameLocation": "Orchard Park, NY",
+    "gameStatus": "Completed",
+    "gameWeek": "Week 18",
+    "home": "BUF",
+    "homePts": "35",
+    "homeResult": "W",
+    "lineScore": {
+      "period": "Final",
+      "gameClock": "",
+      "away": {
+        "Q1": "0",
+        "Q2": "0",
+        "Q3": "0",
+        "Q4": "8",
+        "teamID": "25",
+        "currentlyInPossession": "False",
+        "totalPts": "8",
+        "teamAbv": "NYJ"
+      },
+      "home": {
+        "Q1": "7",
+        "Q2": "14",
+        "Q3": "8",
+        "Q4": "6",
+        "teamID": "4",
+        "currentlyInPossession": "False",
+        "totalPts": "35",
+        "teamAbv": "BUF"
+      }
+    },
+    "network": "CBS",
+    "playerStats": {
+      "3915411": {
+        "gameID": "20260104_NYJ@BUF",
+        "Rushing": {
+          "rushAvg": "2.8",
+          "rushYds": "36",
+          "carries": "13",
+          "longRush": "7",
+          "rushTD": "1"
+        },
+        "Receiving": {
+          "receptions": "2",
+          "recTD": "1",
+          "longRec": "14",
+          "targets": "2",
+          "recYds": "20",
+          "recAvg": "10.0"
+        },
+        "scoringPlays": [
+          {
+            "score": "Ty Johnson 6 Yd Rush (Matt Prater Kick)",
+            "scorePeriod": "Q2",
+            "homeScore": "14",
+            "awayScore": "0",
+            "teamID": "4",
+            "scoreDetails": "13 plays, 84 yards, 6:21",
+            "scoreType": "TD",
+            "scoreTime": "11:43",
+            "team": "BUF",
+            "playerIDs": [
+              "3915411",
+              "11122"
+            ]
+          },
+          {
+            "score": "Ty Johnson 6 Yd pass from Mitchell Trubisky (Two-Point Pass Conversion Failed)",
+            "scorePeriod": "Q4",
+            "homeScore": "35",
+            "awayScore": "0",
+            "teamID": "4",
+            "scoreDetails": "5 plays, 55 yards, 2:55",
+            "scoreType": "TD",
+            "scoreTime": "12:05",
+            "team": "BUF",
+            "playerIDs": [
+              "3039707",
+              "3915411"
+            ]
+          }
+        ],
+        "teamID": "4",
+        "snapCounts": {
+          "offSnapPct": "0.33",
+          "defSnap": "0",
+          "stSnap": "0",
+          "stSnapPct": "0.00",
+          "offSnap": "25",
+          "defSnapPct": "0.00"
+        },
+        "team": "BUF",
+        "teamAbv": "BUF",
+        "playerID": "3915411",
+        "longName": "Ty Johnson"
+      },
+      "3039707": {
+        "gameID": "20260104_NYJ@BUF",
+        "Rushing": {
+          "rushAvg": "1.0",
+          "rushYds": "5",
+          "carries": "5",
+          "longRush": "9",
+          "rushTD": "0"
+        },
+        "Passing": {
+          "qbr": "90.8",
+          "rtg": "142.1",
+          "sacked": "0-0",
+          "passAttempts": "29",
+          "passAvg": "8.9",
+          "passTD": "4",
+          "passYds": "259",
+          "int": "0",
+          "passingTwoPointConversion": "1",
+          "passCompletions": "22"
+        },
+        "scoringPlays": [
+          {
+            "score": "Dawson Knox 17 Yd pass from Mitchell Trubisky (Matt Prater Kick)",
+            "scorePeriod": "Q1",
+            "homeScore": "7",
+            "awayScore": "0",
+            "teamID": "4",
+            "scoreDetails": "11 plays, 80 yards, 6:43",
+            "scoreType": "TD",
+            "scoreTime": "8:17",
+            "team": "BUF",
+            "playerIDs": [
+              "3039707",
+              "3930086",
+              "11122"
+            ]
+          },
+          {
+            "score": "Ray Davis 2 Yd pass from Mitchell Trubisky (Matt Prater Kick)",
+            "scorePeriod": "Q2",
+            "homeScore": "21",
+            "awayScore": "0",
+            "teamID": "4",
+            "scoreDetails": "5 plays, 51 yards, 2:53",
+            "scoreType": "TD",
+            "scoreTime": "4:58",
+            "team": "BUF",
+            "playerIDs": [
+              "3039707",
+              "4429501",
+              "11122"
+            ]
+          },
+          {
+            "score": "Gabe Davis 2 Yd pass from Mitchell Trubisky (Mitchell Trubisky Pass to Keon Coleman for Two-Point Conversion)",
+            "scorePeriod": "Q3",
+            "homeScore": "29",
+            "awayScore": "0",
+            "teamID": "4",
+            "scoreDetails": "11 plays, 54 yards, 5:03",
+            "scoreType": "TD",
+            "scoreTime": "7:46",
+            "team": "BUF",
+            "playerIDs": [
+              "3039707",
+              "4635008",
+              "4243537"
+            ]
+          },
+          {
+            "score": "Ty Johnson 6 Yd pass from Mitchell Trubisky (Two-Point Pass Conversion Failed)",
+            "scorePeriod": "Q4",
+            "homeScore": "35",
+            "awayScore": "0",
+            "teamID": "4",
+            "scoreDetails": "5 plays, 55 yards, 2:55",
+            "scoreType": "TD",
+            "scoreTime": "12:05",
+            "team": "BUF",
+            "playerIDs": [
+              "3039707",
+              "3915411"
+            ]
+          }
+        ],
+        "teamID": "4",
+        "snapCounts": {
+          "offSnapPct": "0.99",
+          "defSnap": "0",
+          "stSnap": "0",
+          "stSnapPct": "0.00",
+          "offSnap": "74",
+          "defSnapPct": "0.00"
+        },
+        "team": "BUF",
+        "teamAbv": "BUF",
+        "playerID": "3039707",
+        "longName": "Mitchell Trubisky"
+      },
+      "4613050": {
+        "gameID": "20260104_NYJ@BUF",
+        "Receiving": {
+          "receptions": "1",
+          "recTD": "0",
+          "recAvg": "10.0",
+          "receivingTwoPointConversion": "1",
+          "longRec": "10",
+          "targets": "1",
+          "recYds": "10"
+        },
+        "scoringPlays": [
+          {
+            "score": "Andrew Beck 2 Yd pass from Brady Cook (Brady Cook Pass to Quentin Skinner for Two-Point Conversion)",
+            "scorePeriod": "Q4",
+            "homeScore": "35",
+            "awayScore": "8",
+            "teamID": "25",
+            "scoreDetails": "10 plays, 48 yards, 4:32",
+            "scoreType": "TD",
+            "scoreTime": "7:33",
+            "team": "NYJ",
+            "playerIDs": [
+              "4429435",
+              "4613050",
+              "3125107"
+            ]
+          }
+        ],
+        "teamID": "25",
+        "snapCounts": {
+          "offSnapPct": "0.33",
+          "defSnap": "0",
+          "stSnap": "0",
+          "stSnapPct": "0.00",
+          "offSnap": "16",
+          "defSnapPct": "0.00"
+        },
+        "team": "NYJ",
+        "teamAbv": "NYJ",
+        "playerID": "4613050",
+        "longName": "Quentin Skinner"
+      },
+      "4429501": {
+        "gameID": "20260104_NYJ@BUF",
+        "Rushing": {
+          "rushAvg": "7.2",
+          "rushYds": "151",
+          "carries": "21",
+          "longRush": "23",
+          "rushTD": "0"
+        },
+        "Receiving": {
+          "receptions": "2",
+          "recTD": "1",
+          "longRec": "21",
+          "targets": "2",
+          "recYds": "23",
+          "recAvg": "11.5"
+        },
+        "scoringPlays": [
+          {
+            "score": "Ray Davis 2 Yd pass from Mitchell Trubisky (Matt Prater Kick)",
+            "scorePeriod": "Q2",
+            "homeScore": "21",
+            "awayScore": "0",
+            "teamID": "4",
+            "scoreDetails": "5 plays, 51 yards, 2:53",
+            "scoreType": "TD",
+            "scoreTime": "4:58",
+            "team": "BUF",
+            "playerIDs": [
+              "3039707",
+              "4429501",
+              "11122"
+            ]
+          }
+        ],
+        "teamID": "4",
+        "snapCounts": {
+          "offSnapPct": "0.64",
+          "defSnap": "0",
+          "stSnap": "2",
+          "stSnapPct": "0.13",
+          "offSnap": "48",
+          "defSnapPct": "0.00"
+        },
+        "Kicking": {
+          "kickReturns": "1",
+          "kickReturnTD": "0",
+          "kickReturnYds": "22",
+          "kickReturnAvg": "22.0",
+          "kickReturnLong": "22"
+        },
+        "team": "BUF",
+        "teamAbv": "BUF",
+        "playerID": "4429501",
+        "longName": "Ray Davis"
+      },
+      "4635008": {
+        "gameID": "20260104_NYJ@BUF",
+        "Receiving": {
+          "receptions": "2",
+          "recTD": "0",
+          "recAvg": "24.5",
+          "receivingTwoPointConversion": "1",
+          "longRec": "37",
+          "targets": "4",
+          "recYds": "49"
+        },
+        "scoringPlays": [
+          {
+            "score": "Gabe Davis 2 Yd pass from Mitchell Trubisky (Mitchell Trubisky Pass to Keon Coleman for Two-Point Conversion)",
+            "scorePeriod": "Q3",
+            "homeScore": "29",
+            "awayScore": "0",
+            "teamID": "4",
+            "scoreDetails": "11 plays, 54 yards, 5:03",
+            "scoreType": "TD",
+            "scoreTime": "7:46",
+            "team": "BUF",
+            "playerIDs": [
+              "3039707",
+              "4635008",
+              "4243537"
+            ]
+          }
+        ],
+        "teamID": "4",
+        "snapCounts": {
+          "offSnapPct": "0.81",
+          "defSnap": "0",
+          "stSnap": "5",
+          "stSnapPct": "0.31",
+          "offSnap": "61",
+          "defSnapPct": "0.00"
+        },
+        "Punting": {
+          "puntReturns": "1",
+          "puntReturnYds": "2",
+          "puntReturnAvg": "2.0",
+          "puntReturnLong": "2",
+          "puntReturnTD": "0"
+        },
+        "team": "BUF",
+        "teamAbv": "BUF",
+        "playerID": "4635008",
+        "longName": "Keon Coleman"
+      },
+      "3930086": {
+        "gameID": "20260104_NYJ@BUF",
+        "Receiving": {
+          "receptions": "2",
+          "recTD": "1",
+          "longRec": "17",
+          "targets": "2",
+          "recYds": "24",
+          "recAvg": "12.0"
+        },
+        "scoringPlays": [
+          {
+            "score": "Dawson Knox 17 Yd pass from Mitchell Trubisky (Matt Prater Kick)",
+            "scorePeriod": "Q1",
+            "homeScore": "7",
+            "awayScore": "0",
+            "teamID": "4",
+            "scoreDetails": "11 plays, 80 yards, 6:43",
+            "scoreType": "TD",
+            "scoreTime": "8:17",
+            "team": "BUF",
+            "playerIDs": [
+              "3039707",
+              "3930086",
+              "11122"
+            ]
+          }
+        ],
+        "teamID": "4",
+        "snapCounts": {
+          "offSnapPct": "0.05",
+          "defSnap": "0",
+          "stSnap": "0",
+          "stSnapPct": "0.00",
+          "offSnap": "4",
+          "defSnapPct": "0.00"
+        },
+        "team": "BUF",
+        "teamAbv": "BUF",
+        "playerID": "3930086",
+        "longName": "Dawson Knox"
+      },
+      "4429435": {
+        "gameID": "20260104_NYJ@BUF",
+        "Rushing": {
+          "rushAvg": "2.3",
+          "rushYds": "7",
+          "carries": "3",
+          "longRush": "5",
+          "rushTD": "0"
+        },
+        "Passing": {
+          "qbr": "24.7",
+          "rtg": "71.4",
+          "sacked": "1-7",
+          "passAttempts": "22",
+          "passAvg": "2.7",
+          "passTD": "1",
+          "passYds": "60",
+          "int": "0",
+          "passingTwoPointConversion": "1",
+          "passCompletions": "11"
+        },
+        "scoringPlays": [
+          {
+            "score": "Andrew Beck 2 Yd pass from Brady Cook (Brady Cook Pass to Quentin Skinner for Two-Point Conversion)",
+            "scorePeriod": "Q4",
+            "homeScore": "35",
+            "awayScore": "8",
+            "teamID": "25",
+            "scoreDetails": "10 plays, 48 yards, 4:32",
+            "scoreType": "TD",
+            "scoreTime": "7:33",
+            "team": "NYJ",
+            "playerIDs": [
+              "4429435",
+              "4613050",
+              "3125107"
+            ]
+          }
+        ],
+        "teamID": "25",
+        "snapCounts": {
+          "offSnapPct": "1.00",
+          "defSnap": "0",
+          "stSnap": "0",
+          "stSnapPct": "0.00",
+          "offSnap": "48",
+          "defSnapPct": "0.00"
+        },
+        "team": "NYJ",
+        "teamAbv": "NYJ",
+        "playerID": "4429435",
+        "longName": "Brady Cook"
+      },
+      "4243537": {
+        "gameID": "20260104_NYJ@BUF",
+        "Receiving": {
+          "receptions": "5",
+          "recTD": "1",
+          "longRec": "18",
+          "targets": "7",
+          "recYds": "41",
+          "recAvg": "8.2"
+        },
+        "scoringPlays": [
+          {
+            "score": "Gabe Davis 2 Yd pass from Mitchell Trubisky (Mitchell Trubisky Pass to Keon Coleman for Two-Point Conversion)",
+            "scorePeriod": "Q3",
+            "homeScore": "29",
+            "awayScore": "0",
+            "teamID": "4",
+            "scoreDetails": "11 plays, 54 yards, 5:03",
+            "scoreType": "TD",
+            "scoreTime": "7:46",
+            "team": "BUF",
+            "playerIDs": [
+              "3039707",
+              "4635008",
+              "4243537"
+            ]
+          }
+        ],
+        "teamID": "4",
+        "snapCounts": {
+          "offSnapPct": "0.93",
+          "defSnap": "0",
+          "stSnap": "0",
+          "stSnapPct": "0.00",
+          "offSnap": "70",
+          "defSnapPct": "0.00"
+        },
+        "team": "BUF",
+        "teamAbv": "BUF",
+        "playerID": "4243537",
+        "longName": "Gabe Davis"
+      },
+      "3125107": {
+        "gameID": "20260104_NYJ@BUF",
+        "Receiving": {
+          "receptions": "1",
+          "recTD": "1",
+          "longRec": "2",
+          "targets": "2",
+          "recYds": "2",
+          "recAvg": "2.0"
+        },
+        "scoringPlays": [
+          {
+            "score": "Andrew Beck 2 Yd pass from Brady Cook (Brady Cook Pass to Quentin Skinner for Two-Point Conversion)",
+            "scorePeriod": "Q4",
+            "homeScore": "35",
+            "awayScore": "8",
+            "teamID": "25",
+            "scoreDetails": "10 plays, 48 yards, 4:32",
+            "scoreType": "TD",
+            "scoreTime": "7:33",
+            "team": "NYJ",
+            "playerIDs": [
+              "4429435",
+              "4613050",
+              "3125107"
+            ]
+          }
+        ],
+        "teamID": "25",
+        "snapCounts": {
+          "offSnapPct": "0.25",
+          "defSnap": "0",
+          "stSnap": "13",
+          "stSnapPct": "0.81",
+          "offSnap": "12",
+          "defSnapPct": "0.00"
+        },
+        "team": "NYJ",
+        "teamAbv": "NYJ",
+        "playerID": "3125107",
+        "longName": "Andrew Beck"
+      },
+      "11122": {
+        "gameID": "20260104_NYJ@BUF",
+        "scoringPlays": [
+          {
+            "score": "Dawson Knox 17 Yd pass from Mitchell Trubisky (Matt Prater Kick)",
+            "scorePeriod": "Q1",
+            "homeScore": "7",
+            "awayScore": "0",
+            "teamID": "4",
+            "scoreDetails": "11 plays, 80 yards, 6:43",
+            "scoreType": "TD",
+            "scoreTime": "8:17",
+            "team": "BUF",
+            "playerIDs": [
+              "3039707",
+              "3930086",
+              "11122"
+            ]
+          },
+          {
+            "score": "Ty Johnson 6 Yd Rush (Matt Prater Kick)",
+            "scorePeriod": "Q2",
+            "homeScore": "14",
+            "awayScore": "0",
+            "teamID": "4",
+            "scoreDetails": "13 plays, 84 yards, 6:21",
+            "scoreType": "TD",
+            "scoreTime": "11:43",
+            "team": "BUF",
+            "playerIDs": [
+              "3915411",
+              "11122"
+            ]
+          },
+          {
+            "score": "Ray Davis 2 Yd pass from Mitchell Trubisky (Matt Prater Kick)",
+            "scorePeriod": "Q2",
+            "homeScore": "21",
+            "awayScore": "0",
+            "teamID": "4",
+            "scoreDetails": "5 plays, 51 yards, 2:53",
+            "scoreType": "TD",
+            "scoreTime": "4:58",
+            "team": "BUF",
+            "playerIDs": [
+              "3039707",
+              "4429501",
+              "11122"
+            ]
+          }
+        ],
+        "teamID": "4",
+        "snapCounts": {
+          "offSnapPct": "0.00",
+          "defSnap": "0",
+          "stSnap": "6",
+          "stSnapPct": "0.38",
+          "offSnap": "0",
+          "defSnapPct": "0.00"
+        },
+        "Kicking": {
+          "fgLong": "0",
+          "fgMade": "0",
+          "fgAttempts": "0",
+          "xpMade": "3",
+          "fgPct": "0.0",
+          "kickingPts": "3",
+          "xpAttempts": "3",
+          "fgMissed": "0",
+          "xpMissed": "0"
+        },
+        "team": "BUF",
+        "teamAbv": "BUF",
+        "playerID": "11122",
+        "longName": "Matt Prater"
+      }
+    },
+    "scoringPlays": [
+      {
+        "score": "Dawson Knox 17 Yd pass from Mitchell Trubisky (Matt Prater Kick)",
+        "scorePeriod": "Q1",
+        "homeScore": "7",
+        "awayScore": "0",
+        "teamID": "4",
+        "scoreDetails": "11 plays, 80 yards, 6:43",
+        "scoreType": "TD",
+        "scoreTime": "8:17",
+        "team": "BUF",
+        "playerIDs": [
+          "3039707",
+          "3930086",
+          "11122"
+        ]
+      },
+      {
+        "score": "Ty Johnson 6 Yd Rush (Matt Prater Kick)",
+        "scorePeriod": "Q2",
+        "homeScore": "14",
+        "awayScore": "0",
+        "teamID": "4",
+        "scoreDetails": "13 plays, 84 yards, 6:21",
+        "scoreType": "TD",
+        "scoreTime": "11:43",
+        "team": "BUF",
+        "playerIDs": [
+          "3915411",
+          "11122"
+        ]
+      },
+      {
+        "score": "Ray Davis 2 Yd pass from Mitchell Trubisky (Matt Prater Kick)",
+        "scorePeriod": "Q2",
+        "homeScore": "21",
+        "awayScore": "0",
+        "teamID": "4",
+        "scoreDetails": "5 plays, 51 yards, 2:53",
+        "scoreType": "TD",
+        "scoreTime": "4:58",
+        "team": "BUF",
+        "playerIDs": [
+          "3039707",
+          "4429501",
+          "11122"
+        ]
+      },
+      {
+        "score": "Gabe Davis 2 Yd pass from Mitchell Trubisky (Mitchell Trubisky Pass to Keon Coleman for Two-Point Conversion)",
+        "scorePeriod": "Q3",
+        "homeScore": "29",
+        "awayScore": "0",
+        "teamID": "4",
+        "scoreDetails": "11 plays, 54 yards, 5:03",
+        "scoreType": "TD",
+        "scoreTime": "7:46",
+        "team": "BUF",
+        "playerIDs": [
+          "3039707",
+          "4635008",
+          "4243537"
+        ]
+      },
+      {
+        "score": "Ty Johnson 6 Yd pass from Mitchell Trubisky (Two-Point Pass Conversion Failed)",
+        "scorePeriod": "Q4",
+        "homeScore": "35",
+        "awayScore": "0",
+        "teamID": "4",
+        "scoreDetails": "5 plays, 55 yards, 2:55",
+        "scoreType": "TD",
+        "scoreTime": "12:05",
+        "team": "BUF",
+        "playerIDs": [
+          "3039707",
+          "3915411"
+        ]
+      },
+      {
+        "score": "Andrew Beck 2 Yd pass from Brady Cook (Brady Cook Pass to Quentin Skinner for Two-Point Conversion)",
+        "scorePeriod": "Q4",
+        "homeScore": "35",
+        "awayScore": "8",
+        "teamID": "25",
+        "scoreDetails": "10 plays, 48 yards, 4:32",
+        "scoreType": "TD",
+        "scoreTime": "7:33",
+        "team": "NYJ",
+        "playerIDs": [
+          "4429435",
+          "4613050",
+          "3125107"
+        ]
+      }
+    ],
+    "seasonType": "Regular Season",
+    "teamIDAway": "25",
+    "teamIDHome": "4",
+    "gameID": "20260104_NYJ@BUF",
+    "gameStatusCode": "2"
+  }
+}
