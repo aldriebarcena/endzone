@@ -24,6 +24,7 @@ venv/
 # Env files
 .env
 .env.local
+backend/env.json
 
 # Raw API exploration output (Phase 2)
 backend/scripts/output/

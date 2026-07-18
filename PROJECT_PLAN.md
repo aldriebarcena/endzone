@@ -24,7 +24,8 @@ Task checklist tracking progress against [DESIGN.md](DESIGN.md)'s Build order. P
 - [x] Poller Lambda + Step Functions `Wait`-loop — polls every 90s until the poller reports the game is final, then the execution ends itself (EventBridge can't natively schedule sub-60s, so this replaces the originally-planned "checker enables/disables a second EventBridge rule" approach — see DESIGN.md)
 - [x] AWS CLI + SAM CLI installed; `sam validate --lint` and `sam build` both succeed. Confirmed the built package layout (flat `checker/`, `poller/`, `adapters/`, `models.py`, etc. per function) resolves imports correctly by running the built `checker` package directly.
 - [x] Handler logic unit-tested with pytest + mocked boto3 (11 new tests: checker, poller, storage round-trip) — no Docker needed for this
-- [ ] `sam local invoke` — blocked on Docker Desktop, which needs an interactive sudo prompt its installer couldn't get from this shell; user is installing it themselves
+- [x] `sam local invoke CheckerFunction` — Docker installed and running; ran in a real Lambda container against the live Tank01 API, correctly found no live games (NFL off-season) and returned `{"started": false}` without ever needing AWS credentials (short-circuits before touching Step Functions)
+- [ ] `sam local invoke PollerFunction` — deferred; needs AWS credentials configured (DynamoDB calls), which aren't set up yet. Poller logic is already covered by the 11 mocked pytest tests in the meantime.
 - [ ] `sam deploy --guided` — not run yet (creates real billed AWS resources; needs AWS credentials configured and explicit go-ahead first)
 
 ## Phase 4 — SQS + push Lambda + APNs fan-out
