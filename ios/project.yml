@@ -1,0 +1,65 @@
+name: Fantasee
+options:
+  bundleIdPrefix: com.fantasee
+  deploymentTarget:
+    iOS: "17.0"
+  createIntermediateGroups: true
+
+configs:
+  Debug: debug
+  Release: release
+
+targets:
+  Fantasee:
+    type: application
+    platform: iOS
+    sources:
+      - path: Fantasee
+    info:
+      path: Generated/Info.plist
+      properties:
+        CFBundleDisplayName: Fantasee
+        UILaunchScreen: {}
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: false
+        UIBackgroundModes:
+          - remote-notification
+    entitlements:
+      path: Generated/Fantasee.entitlements
+      properties:
+        com.apple.developer.applesignin:
+          - Default
+        aps-environment: development
+    settings:
+      base:
+        # Placeholder — real bundle ID needs a registered Apple Developer
+        # Team before Sign in with Apple / push entitlements actually work.
+        PRODUCT_BUNDLE_IDENTIFIER: com.fantasee.app
+        SWIFT_VERSION: "5.0"
+        TARGETED_DEVICE_FAMILY: "1"
+        CODE_SIGN_STYLE: Automatic
+
+  FantaseeTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: FantaseeTests
+    dependencies:
+      - target: Fantasee
+    settings:
+      base:
+        SWIFT_VERSION: "5.0"
+        GENERATE_INFOPLIST_FILE: YES
+
+schemes:
+  Fantasee:
+    build:
+      targets:
+        Fantasee: all
+        FantaseeTests: [test]
+    run:
+      config: Debug
+    test:
+      config: Debug
+      targets:
+        - FantaseeTests

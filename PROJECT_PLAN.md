@@ -47,12 +47,13 @@ Task checklist tracking progress against [DESIGN.md](DESIGN.md)'s Build order. P
 - Not wired to a Lambda/trigger — `import_league()` is plain testable Python, same pattern as everything else. Actually invoking it needs the same missing API surface flagged below.
 
 ## Phase 6 — iOS app
-- [ ] Xcode project (SwiftUI)
-- [ ] Sign in with Apple
-- [ ] SwiftData models mirroring `GameState` / `ScoringEvent` / `LeagueConfig`
-- [ ] URLSession networking layer
-- [ ] APNs push handling (UserNotifications framework)
-- [ ] Can be stubbed against fake data early to parallelize with backend work
+- [x] Xcode project (SwiftUI) — generated via XcodeGen (`ios/project.yml`) rather than hand-crafted `.pbxproj`. `PRODUCT_BUNDLE_IDENTIFIER` (`com.fantasee.app`) is a placeholder pending a real Apple Developer Team.
+- [x] Sign in with Apple — `Auth/AuthManager.swift` + SwiftUI's native `SignInWithAppleButton` (no hand-rolled `ASAuthorizationController` delegate boilerplate needed). Verified: app launches straight to the sign-in screen and the real button renders, screenshot-confirmed in the iOS 26.3 simulator.
+- [x] SwiftData models mirroring `GameState` / `ScoringEvent` / `LeagueConfig` — `Models/`, 1:1 with the backend's dataclasses/DynamoDB item shape (`eventDescription` instead of `description` to avoid the `CustomStringConvertible` collision).
+- [x] URLSession networking layer — `Networking/FantaseeAPI.swift` (protocol) + `URLSessionFantaseeAPI.swift` (real, untestable end-to-end since the backend API surface doesn't exist yet) + `FakeFantaseeAPI.swift` (seeded with Phase 2's real scoring-play fixture data). Caught and fixed a real bug here too: DTOs initially assumed `.convertFromSnakeCase`, but the backend's actual wire format (`storage.py`, `league_import.py`) is already camelCase — fixed before it shipped.
+- [x] APNs push handling (UserNotifications framework) — `Push/PushNotificationManager.swift` + `App/AppDelegate.swift`. Verified: the real `UNUserNotificationCenter.requestAuthorization()` system dialog fired on launch (screenshot-confirmed) — actual delivery is untestable without a physical device + Apple Developer account (see DESIGN.md's scope decision — not required).
+- [x] Stubbed against fake data — `LiveFeedView` runs against `FakeFantaseeAPI` right now; swapping to the real client is a one-line change once the backend API surface exists.
+- [x] End-to-end verification, not just "should compile": `xcodebuild build` succeeded, the app was installed and launched in a real iOS 26.3 simulator (screenshots confirm both the notification-permission dialog and the sign-in screen rendering correctly), and `xcodebuild test` passed (2 tests, Swift Testing framework).
 
 ---
 
