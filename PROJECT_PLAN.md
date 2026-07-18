@@ -8,12 +8,11 @@ Task checklist tracking progress against [DESIGN.md](DESIGN.md)'s Build order. P
 - [x] Define `fetchGameState(gameId) -> GameState` adapter function signature (stub, no real provider yet)
 - [x] Unit test scaffolding for model construction
 
-## Phase 2 — SportAPI7 integration (local validation)
-- [ ] Get a RapidAPI key, subscribed to **SportAPI7** (`rapidsportapi`) — https://rapidapi.com/rapidsportapi/api/sportapi7 (API-Football and API-American-Football, tried first, turned out to be soccer-only / a dead link respectively)
-- [ ] Confirm the actual free-tier request cap on the pricing page (assumed ~100/day in DESIGN.md, unconfirmed)
+## Phase 2 — Tank01 NFL integration (local validation)
+- [ ] Get a RapidAPI key, subscribed to **Tank01 NFL Live In-Game Real-Time Statistics** (`tank01`) — https://rapidapi.com/tank01/api/tank01-nfl-live-in-game-real-time-statistics-nfl (free tier: 1,000 req/month, confirmed). Providers tried and rejected first: API-Football (soccer-only), API-American-Football (dead RapidAPI link), SportAPI7 (50 req/**month**, unusably low).
 - [x] Plain local script (not Lambda) to hit the provider and dump raw JSON for inspection — `backend/scripts/explore_api.py`
-- [ ] Run the script against a real game once a key exists, confirm actual endpoint paths/host (script's `RAPIDAPI_HOST` default and example endpoint paths are unverified guesses)
-- [ ] Implement the SportAPI7 adapter (`backend/src/adapters/sportapi7.py`) conforming to `fetch_game_state()`, against the real response shape
+- [ ] Run the script against a real game once a key exists — endpoint names (`getNFLGamesForDate`, `getNFLBoxScore`, etc.) and host are confirmed from Tank01's docs, but the actual box-score/scoring-play JSON shape isn't published anywhere reachable, so this is still the first real look at it
+- [ ] Implement the Tank01 adapter (`backend/src/adapters/tank01.py`) conforming to `fetch_game_state()`, against the real response shape
 - [ ] Snapshot two consecutive fetches, diff them, confirm a scoring event is detectable
 - [ ] Write up findings — this step is most likely to reveal free-tier data quality problems (delay, incompleteness); confirm before building AWS around it
 

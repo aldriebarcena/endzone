@@ -1,20 +1,19 @@
-"""Phase 2, step 1: raw exploration against SportAPI7 (RapidAPI, rapidsportapi).
+"""Phase 2, step 1: raw exploration against Tank01 NFL (RapidAPI, tank01).
 
-We don't yet know the exact response shape for games/events, so this hits
-an arbitrary endpoint and dumps the raw JSON to disk for inspection rather
-than guessing field names and writing a transform against them blind.
-Once we've looked at real output, src/adapters/sportapi7.py gets written
-against the actual shape.
+We don't yet know the exact response shape for box scores/scoring plays,
+so this hits an arbitrary endpoint and dumps the raw JSON to disk for
+inspection rather than guessing field names and writing a transform
+against them blind. Once we've looked at real output,
+src/adapters/tank01.py gets written against the actual shape.
+
+Endpoint names below (getNFLGamesForDate, getNFLBoxScore, getNFLScoresOnly)
+and the host are confirmed from Tank01's own docs at tank01.com/RapidAPI —
+but the exact response JSON for box scores/scoring plays is not, since
+that wasn't published anywhere reachable. That's what this script is for.
 
 Usage:
-    RAPIDAPI_KEY=xxx python scripts/explore_api.py api/american-football/matches/live
-    RAPIDAPI_KEY=xxx python scripts/explore_api.py api/american-football/match/12345
-
-RAPIDAPI_HOST defaults to a best guess (sportapi7.p.rapidapi.com), and the
-endpoint paths above are a guess based on this provider's typical SofaScore-
-style REST convention — neither has been verified against a real key yet.
-Confirm both from the RapidAPI dashboard's "Code Snippets" / "Endpoints"
-tab after subscribing.
+    RAPIDAPI_KEY=xxx python scripts/explore_api.py getNFLGamesForDate --param gameDate=20260104
+    RAPIDAPI_KEY=xxx python scripts/explore_api.py getNFLBoxScore --param gameID=<id from above>
 """
 
 from __future__ import annotations
@@ -28,7 +27,7 @@ from pathlib import Path
 
 import requests
 
-DEFAULT_HOST = "sportapi7.p.rapidapi.com"
+DEFAULT_HOST = "tank01-nfl-live-in-game-real-time-statistics-nfl.p.rapidapi.com"
 OUTPUT_DIR = Path(__file__).parent / "output"
 
 
@@ -50,7 +49,7 @@ def fetch(endpoint: str, params: dict[str, str]) -> dict:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("endpoint", help="path, e.g. api/american-football/match/12345")
+    parser.add_argument("endpoint", help="e.g. getNFLGamesForDate, getNFLBoxScore")
     parser.add_argument(
         "--param",
         action="append",

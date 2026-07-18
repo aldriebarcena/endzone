@@ -11,8 +11,8 @@ Purpose: new-grad portfolio project. Fills resume gaps (client-facing app, real-
 
 - **One live game tracked at a time** (user-selected, or auto-selected as the highest-scoring active game in their league). Multi-game concurrent tracking is explicit future work, not an oversight.
 - **League import: Sleeper only** (public, read-only, no auth). Yahoo/ESPN are future work — not built symmetrically now.
-- **Data provider: SportAPI7 (RapidAPI, `rapidsportapi`)**. Covers American football among other sports. Free tier request cap not yet confirmed (pricing page needs checking directly on RapidAPI) — poll-interval math below assumes a ~100 requests/day ceiling pending that confirmation.
-- **Poll interval: 90 seconds, only during live windows.** Roughly 140 requests per 3.5hr game at 90s — already near/over the assumed daily cap for more than one game, hence the single-game constraint. Revisit this math once the actual free-tier cap is confirmed.
+- **Data provider: Tank01 NFL Live In-Game Real-Time Statistics (RapidAPI, `tank01`)**. Purpose-built for fantasy football — box scores return fantasy points per player with custom league scoring, not just raw stats. Free tier: **1,000 requests/month hard cap** (confirmed on the RapidAPI pricing page; tried API-Football — soccer-only — and SportAPI7 — 50 req/**month**, unusably low — first).
+- **Poll interval: 90 seconds, only during live windows.** Roughly 140 requests per 3.5hr game at 90s — that's **~7 full games per month** against the 1,000 cap. Fine for a portfolio demo across part of a season, not for tracking a game every week all season. Paid tier ($10/mo) raises this to 1,000 req/**day** if that's ever needed.
 - Build against the free tier **behind an adapter interface** so switching to a paid provider later (if this goes to production) is a config change, not a rewrite.
 
 ---
@@ -41,7 +41,7 @@ Purpose: new-grad portfolio project. Fills resume gaps (client-facing app, real-
 
 ### Data provider abstraction
 - Internal types: `GameState`, `ScoringEvent` (your own model, not the provider's JSON shape).
-- One adapter function: `fetchGameState(gameId) -> GameState`, currently backed by SportAPI7.
+- One adapter function: `fetchGameState(gameId) -> GameState`, currently backed by Tank01.
 - If you later pay for a provider (e.g., SportsDataIO) for production use, you add a second adapter and swap one line — nothing downstream (SQS, DynamoDB schema, push logic, iOS app) changes.
 
 ### League import
@@ -53,7 +53,7 @@ Purpose: new-grad portfolio project. Fills resume gaps (client-facing app, real-
 
 - **AWS infra (Lambda, EventBridge, SQS, DynamoDB, SNS):** effectively $0–5/month at this scale (comfortably within free tiers). Not the actual cost driver — don't over-index on "optimizing AWS costs" in writeups at this scale.
 - **Sports data API is the real cost variable long-term:**
-  - Free tier (SportAPI7): request cap unconfirmed, assumed ~100 req/day pending checking the actual pricing page — workable for one tracked game at 90s intervals, not more.
+  - Free tier (Tank01): 1,000 req/month hard cap — roughly 7 full tracked games per month at 90s intervals, not more.
   - Paid live-data tiers: roughly $25–100+/month for broader coverage/frequency; full enterprise feeds (SportRadar) run much higher and aren't meant for solo projects.
 - **Decision for now:** stay on free tier. Defer any spend decision until you've decided whether this becomes a real production app vs. an on-demand portfolio demo.
 
@@ -62,7 +62,7 @@ Purpose: new-grad portfolio project. Fills resume gaps (client-facing app, real-
 ## Build order (sequence matters)
 
 1. **Data model + adapter interface** (`GameState`, `ScoringEvent`, `fetchGameState()` stub) — before touching AWS or Swift.
-2. **SportAPI7 integration**, validated locally (plain script, not yet Lambda) against a live/recent game — confirm you can diff two snapshots and detect a scoring event. **Verify this first, before building any AWS architecture around it** — this is the step most likely to reveal the free tier doesn't actually give usable in-play NFL data (delay, incompleteness, etc.).
+2. **Tank01 integration**, validated locally (plain script, not yet Lambda) against a live/recent game — confirm you can diff two snapshots and detect a scoring event. **Verify this first, before building any AWS architecture around it** — this is the step most likely to reveal the free tier doesn't actually give usable in-play NFL data (delay, incompleteness, etc.).
 3. **DynamoDB tables + Lambda poller**, deployed via SAM.
 4. **SQS + push Lambda + APNs** fan-out.
 5. **Sleeper import** (independent track, parallelizable with 1–4).
