@@ -22,11 +22,11 @@ def _sqs_record(message_id: str = "msg-1") -> dict:
 
 
 def _env(monkeypatch):
-    monkeypatch.setenv("LEAGUE_CONFIG_TABLE", "fantasee-league-config")
+    monkeypatch.setenv("LEAGUE_CONFIG_TABLE", "endzone-league-config")
     monkeypatch.setenv("APNS_TEAM_ID", "TEAM123")
     monkeypatch.setenv("APNS_KEY_ID", "KEY456")
     monkeypatch.setenv("APNS_PRIVATE_KEY", "fake-key")
-    monkeypatch.setenv("APNS_BUNDLE_ID", "com.example.fantasee")
+    monkeypatch.setenv("APNS_BUNDLE_ID", "com.example.endzone")
 
 
 @patch("push.app.send_push")

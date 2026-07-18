@@ -43,15 +43,15 @@ def _fully_enriched_game_state():
 
 def _table_side_effect(game_table, league_table):
     def side_effect(table_name):
-        return {"fantasee-live-game-state": game_table, "fantasee-league-config": league_table}[table_name]
+        return {"endzone-live-game-state": game_table, "endzone-league-config": league_table}[table_name]
 
     return side_effect
 
 
 @patch("api.get_live_game.app.boto3.resource")
 def test_returns_personalized_points_for_the_authenticated_user(mock_resource, monkeypatch):
-    monkeypatch.setenv("LIVE_GAME_STATE_TABLE", "fantasee-live-game-state")
-    monkeypatch.setenv("LEAGUE_CONFIG_TABLE", "fantasee-league-config")
+    monkeypatch.setenv("LIVE_GAME_STATE_TABLE", "endzone-live-game-state")
+    monkeypatch.setenv("LEAGUE_CONFIG_TABLE", "endzone-league-config")
     game_state = _fully_enriched_game_state()
 
     mock_game_table = MagicMock()
@@ -76,8 +76,8 @@ def test_returns_personalized_points_for_the_authenticated_user(mock_resource, m
 
 @patch("api.get_live_game.app.boto3.resource")
 def test_no_live_game_returns_404(mock_resource, monkeypatch):
-    monkeypatch.setenv("LIVE_GAME_STATE_TABLE", "fantasee-live-game-state")
-    monkeypatch.setenv("LEAGUE_CONFIG_TABLE", "fantasee-league-config")
+    monkeypatch.setenv("LIVE_GAME_STATE_TABLE", "endzone-live-game-state")
+    monkeypatch.setenv("LEAGUE_CONFIG_TABLE", "endzone-league-config")
     mock_game_table = MagicMock()
     mock_game_table.scan.return_value = {"Items": []}
     mock_resource.return_value.Table.side_effect = _table_side_effect(mock_game_table, MagicMock())
@@ -93,8 +93,8 @@ def test_user_with_no_imported_league_gets_zero_points_not_a_crash(mock_resource
     # credited players still appear with 0-point entries rather than the
     # whole response falling over. Correct: the shape stays consistent
     # regardless of whether the league has real scoring settings yet.
-    monkeypatch.setenv("LIVE_GAME_STATE_TABLE", "fantasee-live-game-state")
-    monkeypatch.setenv("LEAGUE_CONFIG_TABLE", "fantasee-league-config")
+    monkeypatch.setenv("LIVE_GAME_STATE_TABLE", "endzone-live-game-state")
+    monkeypatch.setenv("LEAGUE_CONFIG_TABLE", "endzone-league-config")
     game_state = _fully_enriched_game_state()
 
     mock_game_table = MagicMock()
@@ -116,8 +116,8 @@ def test_user_with_no_imported_league_gets_zero_points_not_a_crash(mock_resource
 def test_picks_the_most_recently_fetched_game_when_multiple_stored(mock_resource, monkeypatch):
     # TTL cleans up stale games within ~24h, but a brief window can have
     # more than one non-expired item -- must not pick an arbitrary one.
-    monkeypatch.setenv("LIVE_GAME_STATE_TABLE", "fantasee-live-game-state")
-    monkeypatch.setenv("LEAGUE_CONFIG_TABLE", "fantasee-league-config")
+    monkeypatch.setenv("LIVE_GAME_STATE_TABLE", "endzone-live-game-state")
+    monkeypatch.setenv("LEAGUE_CONFIG_TABLE", "endzone-league-config")
     stale = parse_box_score(TANK01_FIXTURE)
     stale_item = storage.to_item(stale)
     stale_item["gameId"] = "old-game"

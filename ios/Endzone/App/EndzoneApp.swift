@@ -2,20 +2,20 @@ import SwiftData
 import SwiftUI
 
 @main
-struct FantaseeApp: App {
+struct EndzoneApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
     @State private var authManager = AuthManager()
     @State private var pushManager = PushNotificationManager()
-    // TODO: swap for URLSessionFantaseeAPI() once the backend is actually
+    // TODO: swap for URLSessionEndzoneAPI() once the backend is actually
     // deployed (PROJECT_PLAN.md scope decision — currently optional).
-    private let api: FantaseeAPI = FakeFantaseeAPI()
+    private let api: EndzoneAPI = FakeEndzoneAPI()
 
     var body: some Scene {
         WindowGroup {
             ContentView()
                 .environment(authManager)
                 .environment(pushManager)
-                .environment(\.fantaseeAPI, api)
+                .environment(\.endzoneAPI, api)
                 .task {
                     appDelegate.pushManager = pushManager
                     await pushManager.requestAuthorization()

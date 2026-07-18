@@ -6,7 +6,7 @@ struct SignInView: View {
 
     var body: some View {
         VStack(spacing: 16) {
-            Text("Fantasee")
+            Text("Endzone")
                 .font(.largeTitle.bold())
             Text("Live fantasy scoring, as it happens.")
                 .font(.subheadline)

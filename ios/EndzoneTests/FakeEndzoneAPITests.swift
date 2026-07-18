@@ -1,9 +1,9 @@
 import Testing
-@testable import Fantasee
+@testable import Endzone
 
-struct FakeFantaseeAPITests {
+struct FakeEndzoneAPITests {
     @Test func fetchLiveGameReturnsGameWithScoringPlays() async throws {
-        let api = FakeFantaseeAPI()
+        let api = FakeEndzoneAPI()
 
         let game = try await api.fetchLiveGame(authToken: "fake-token")
 
@@ -15,7 +15,7 @@ struct FakeFantaseeAPITests {
         // These are the real numbers verified in
         // backend/tests/test_fantasy_points.py, not placeholder values --
         // this is the whole point of the app (see PROJECT_PLAN.md).
-        let api = FakeFantaseeAPI()
+        let api = FakeEndzoneAPI()
 
         let game = try await api.fetchLiveGame(authToken: "fake-token")
 
@@ -25,7 +25,7 @@ struct FakeFantaseeAPITests {
     }
 
     @Test func importLeagueReturnsSeededPointValues() async throws {
-        let api = FakeFantaseeAPI()
+        let api = FakeEndzoneAPI()
 
         let config = try await api.importLeague(leagueId: "12345", authToken: "fake-token")
 
@@ -34,7 +34,7 @@ struct FakeFantaseeAPITests {
     }
 
     @Test func registerDeviceTokenDoesNotThrow() async throws {
-        let api = FakeFantaseeAPI()
+        let api = FakeEndzoneAPI()
 
         try await api.registerDeviceToken("abc123", authToken: "fake-token")
     }

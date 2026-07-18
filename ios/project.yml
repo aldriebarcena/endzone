@@ -1,6 +1,6 @@
-name: Fantasee
+name: Endzone
 options:
-  bundleIdPrefix: com.fantasee
+  bundleIdPrefix: com.endzone
   deploymentTarget:
     iOS: "17.0"
   createIntermediateGroups: true
@@ -10,22 +10,22 @@ configs:
   Release: release
 
 targets:
-  Fantasee:
+  Endzone:
     type: application
     platform: iOS
     sources:
-      - path: Fantasee
+      - path: Endzone
     info:
       path: Generated/Info.plist
       properties:
-        CFBundleDisplayName: Fantasee
+        CFBundleDisplayName: Endzone
         UILaunchScreen: {}
         UIApplicationSceneManifest:
           UIApplicationSupportsMultipleScenes: false
         UIBackgroundModes:
           - remote-notification
     entitlements:
-      path: Generated/Fantasee.entitlements
+      path: Generated/Endzone.entitlements
       properties:
         com.apple.developer.applesignin:
           - Default
@@ -34,32 +34,32 @@ targets:
       base:
         # Placeholder — real bundle ID needs a registered Apple Developer
         # Team before Sign in with Apple / push entitlements actually work.
-        PRODUCT_BUNDLE_IDENTIFIER: com.fantasee.app
+        PRODUCT_BUNDLE_IDENTIFIER: com.endzone.app
         SWIFT_VERSION: "5.0"
         TARGETED_DEVICE_FAMILY: "1"
         CODE_SIGN_STYLE: Automatic
 
-  FantaseeTests:
+  EndzoneTests:
     type: bundle.unit-test
     platform: iOS
     sources:
-      - path: FantaseeTests
+      - path: EndzoneTests
     dependencies:
-      - target: Fantasee
+      - target: Endzone
     settings:
       base:
         SWIFT_VERSION: "5.0"
         GENERATE_INFOPLIST_FILE: YES
 
 schemes:
-  Fantasee:
+  Endzone:
     build:
       targets:
-        Fantasee: all
-        FantaseeTests: [test]
+        Endzone: all
+        EndzoneTests: [test]
     run:
       config: Debug
     test:
       config: Debug
       targets:
-        - FantaseeTests
+        - EndzoneTests

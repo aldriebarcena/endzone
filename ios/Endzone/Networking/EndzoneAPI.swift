@@ -1,7 +1,7 @@
 import Foundation
 import SwiftUI
 
-protocol FantaseeAPI {
+protocol EndzoneAPI {
     // No gameId parameter -- matches backend/src/api/get_live_game, which
     // always returns whichever single game the backend is currently
     // tracking (DESIGN.md's v1 scope: one live game at a time, globally).
@@ -20,18 +20,18 @@ enum APIError: Error {
     case badResponse(statusCode: Int)
 }
 
-// A single shared instance, injected once in FantaseeApp — lets
+// A single shared instance, injected once in EndzoneApp — lets
 // AuthManager/PushNotificationManager coordination code and every view
 // reach the same client without each owning its own, and swapping
-// FakeFantaseeAPI for URLSessionFantaseeAPI later is a one-line change
+// FakeEndzoneAPI for URLSessionEndzoneAPI later is a one-line change
 // at the injection point.
-private struct FantaseeAPIKey: EnvironmentKey {
-    static let defaultValue: FantaseeAPI = FakeFantaseeAPI()
+private struct EndzoneAPIKey: EnvironmentKey {
+    static let defaultValue: EndzoneAPI = FakeEndzoneAPI()
 }
 
 extension EnvironmentValues {
-    var fantaseeAPI: FantaseeAPI {
-        get { self[FantaseeAPIKey.self] }
-        set { self[FantaseeAPIKey.self] = newValue }
+    var endzoneAPI: EndzoneAPI {
+        get { self[EndzoneAPIKey.self] }
+        set { self[EndzoneAPIKey.self] = newValue }
     }
 }

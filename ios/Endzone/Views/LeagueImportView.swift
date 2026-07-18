@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct LeagueImportView: View {
-    @Environment(\.fantaseeAPI) private var api
+    @Environment(\.endzoneAPI) private var api
     @Environment(AuthManager.self) private var authManager
     @Environment(\.dismiss) private var dismiss
 
@@ -50,7 +50,7 @@ struct LeagueImportView: View {
 
     private func importLeague() async {
         // authToken is required by the backend's JWT authorizer (see
-        // backend/template.yaml FantaseeHttpApi) — a signed-out user
+        // backend/template.yaml EndzoneHttpApi) — a signed-out user
         // can't reach this view via LiveFeedView's normal flow, but the
         // guard keeps this view correct on its own regardless of how
         // it's presented.

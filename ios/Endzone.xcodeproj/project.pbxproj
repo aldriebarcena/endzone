@@ -1,0 +1,496 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		03E531A3B424BFB6C4A75223 /* LeagueConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D170D6B084D89ED462F0F2D /* LeagueConfig.swift */; };
+		0586D19DF7176A3E6DEBE73A /* ScoringEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E20849628D8426440F7BB31D /* ScoringEvent.swift */; };
+		1DE9621B93C91E09857FB0C1 /* FakeEndzoneAPITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF11ED8B79E437D70B77E1C /* FakeEndzoneAPITests.swift */; };
+		48197E38986A35DE0E5703A5 /* LiveFeedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11651CAE45147FFE9B7E8F88 /* LiveFeedView.swift */; };
+		493030820B1F78B1115C6774 /* EndzoneApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9A0A263AB8ED23252EA6A7D /* EndzoneApp.swift */; };
+		508E706D988C98C2ACFA3E88 /* GameState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A35453D0C5020BDF888E353 /* GameState.swift */; };
+		6259F3A109F3A8943816A9E3 /* PushNotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49D29BD56A554601D3099A60 /* PushNotificationManager.swift */; };
+		6625CDC54858661D56BEFC70 /* DTOs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 512CB9A754F8A31F687D886A /* DTOs.swift */; };
+		90B3142C6A34BE3392DD36AA /* LeagueImportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 425D9CDCA5D6D0854FF7835D /* LeagueImportView.swift */; };
+		9FA239F26C0069DAC6D78348 /* FakeEndzoneAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ABF93A7E375113CA94035C2 /* FakeEndzoneAPI.swift */; };
+		A35232C45AD2BA678370E271 /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C2E9E9D1E1153A027781973 /* AuthManager.swift */; };
+		BA645E4B9F28EC93C0F70EF9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3787B1CE00EDC5C430468D49 /* AppDelegate.swift */; };
+		BD4CA22347ABE179EA236318 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F48BCA0F92C2F3C443C9371B /* ContentView.swift */; };
+		CD20E3303651D864E097616C /* URLSessionEndzoneAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75C25B21BBE45E231AF918B5 /* URLSessionEndzoneAPI.swift */; };
+		DB473976B80A2B1509EE97D5 /* EndzoneAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2538AAE5D6A866CC5673C03 /* EndzoneAPI.swift */; };
+		F416C6C24A8BD4D3E1B6109D /* SignInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C1ED5613B89199235F511E /* SignInView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		75F435C3AE95F7BAAC5E926F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 78BC989C194C769378751BE9 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3B6E8AD87F604222D090F9B4;
+			remoteInfo = Endzone;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		11651CAE45147FFE9B7E8F88 /* LiveFeedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveFeedView.swift; sourceTree = "<group>"; };
+		3787B1CE00EDC5C430468D49 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		425D9CDCA5D6D0854FF7835D /* LeagueImportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeagueImportView.swift; sourceTree = "<group>"; };
+		49D29BD56A554601D3099A60 /* PushNotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotificationManager.swift; sourceTree = "<group>"; };
+		4A35453D0C5020BDF888E353 /* GameState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameState.swift; sourceTree = "<group>"; };
+		512CB9A754F8A31F687D886A /* DTOs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTOs.swift; sourceTree = "<group>"; };
+		6C2E9E9D1E1153A027781973 /* AuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManager.swift; sourceTree = "<group>"; };
+		75C25B21BBE45E231AF918B5 /* URLSessionEndzoneAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSessionEndzoneAPI.swift; sourceTree = "<group>"; };
+		785A498CED8BCBAD5F79A58E /* EndzoneTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = EndzoneTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		7ABF93A7E375113CA94035C2 /* FakeEndzoneAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeEndzoneAPI.swift; sourceTree = "<group>"; };
+		7BF11ED8B79E437D70B77E1C /* FakeEndzoneAPITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeEndzoneAPITests.swift; sourceTree = "<group>"; };
+		7D170D6B084D89ED462F0F2D /* LeagueConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeagueConfig.swift; sourceTree = "<group>"; };
+		A2538AAE5D6A866CC5673C03 /* EndzoneAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndzoneAPI.swift; sourceTree = "<group>"; };
+		D8B4710F61844DBE774DDA07 /* Endzone.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Endzone.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E20849628D8426440F7BB31D /* ScoringEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoringEvent.swift; sourceTree = "<group>"; };
+		E5C1ED5613B89199235F511E /* SignInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInView.swift; sourceTree = "<group>"; };
+		E9A0A263AB8ED23252EA6A7D /* EndzoneApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndzoneApp.swift; sourceTree = "<group>"; };
+		F48BCA0F92C2F3C443C9371B /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		024FBE2E3B57E8A71F30E38C /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				4A35453D0C5020BDF888E353 /* GameState.swift */,
+				7D170D6B084D89ED462F0F2D /* LeagueConfig.swift */,
+				E20849628D8426440F7BB31D /* ScoringEvent.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		0EAB28A82C0AA2A7B235F9C9 /* EndzoneTests */ = {
+			isa = PBXGroup;
+			children = (
+				7BF11ED8B79E437D70B77E1C /* FakeEndzoneAPITests.swift */,
+			);
+			path = EndzoneTests;
+			sourceTree = "<group>";
+		};
+		144C585FC1FD0700EEF05FD8 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				3787B1CE00EDC5C430468D49 /* AppDelegate.swift */,
+				E9A0A263AB8ED23252EA6A7D /* EndzoneApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		2EAD125114473DCFE44F043F /* Networking */ = {
+			isa = PBXGroup;
+			children = (
+				512CB9A754F8A31F687D886A /* DTOs.swift */,
+				A2538AAE5D6A866CC5673C03 /* EndzoneAPI.swift */,
+				7ABF93A7E375113CA94035C2 /* FakeEndzoneAPI.swift */,
+				75C25B21BBE45E231AF918B5 /* URLSessionEndzoneAPI.swift */,
+			);
+			path = Networking;
+			sourceTree = "<group>";
+		};
+		35170EEA64BBFB7CBE6ECC2E /* Endzone */ = {
+			isa = PBXGroup;
+			children = (
+				144C585FC1FD0700EEF05FD8 /* App */,
+				64AB9C706DFE8B4973F38DD5 /* Auth */,
+				024FBE2E3B57E8A71F30E38C /* Models */,
+				2EAD125114473DCFE44F043F /* Networking */,
+				B6E6F1D63797D8F426754B68 /* Push */,
+				BC3C7555D0430D10D3BCD03F /* Views */,
+			);
+			path = Endzone;
+			sourceTree = "<group>";
+		};
+		446E07FC8285227BFFAF9297 = {
+			isa = PBXGroup;
+			children = (
+				35170EEA64BBFB7CBE6ECC2E /* Endzone */,
+				0EAB28A82C0AA2A7B235F9C9 /* EndzoneTests */,
+				DA1953641839DCD4D3EEC92C /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		64AB9C706DFE8B4973F38DD5 /* Auth */ = {
+			isa = PBXGroup;
+			children = (
+				6C2E9E9D1E1153A027781973 /* AuthManager.swift */,
+			);
+			path = Auth;
+			sourceTree = "<group>";
+		};
+		B6E6F1D63797D8F426754B68 /* Push */ = {
+			isa = PBXGroup;
+			children = (
+				49D29BD56A554601D3099A60 /* PushNotificationManager.swift */,
+			);
+			path = Push;
+			sourceTree = "<group>";
+		};
+		BC3C7555D0430D10D3BCD03F /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				F48BCA0F92C2F3C443C9371B /* ContentView.swift */,
+				425D9CDCA5D6D0854FF7835D /* LeagueImportView.swift */,
+				11651CAE45147FFE9B7E8F88 /* LiveFeedView.swift */,
+				E5C1ED5613B89199235F511E /* SignInView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		DA1953641839DCD4D3EEC92C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D8B4710F61844DBE774DDA07 /* Endzone.app */,
+				785A498CED8BCBAD5F79A58E /* EndzoneTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		3B6E8AD87F604222D090F9B4 /* Endzone */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7FC1FF04B0AF2949F1A2AF3D /* Build configuration list for PBXNativeTarget "Endzone" */;
+			buildPhases = (
+				94F1A42D4D7A5B211191EAD7 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Endzone;
+			packageProductDependencies = (
+			);
+			productName = Endzone;
+			productReference = D8B4710F61844DBE774DDA07 /* Endzone.app */;
+			productType = "com.apple.product-type.application";
+		};
+		ECBD4D61A1110C3FA7C83710 /* EndzoneTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0A4902CB23E6EBDF567F7B77 /* Build configuration list for PBXNativeTarget "EndzoneTests" */;
+			buildPhases = (
+				823715407C08D97C2288F890 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				442B551593023A3F6655AA11 /* PBXTargetDependency */,
+			);
+			name = EndzoneTests;
+			packageProductDependencies = (
+			);
+			productName = EndzoneTests;
+			productReference = 785A498CED8BCBAD5F79A58E /* EndzoneTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		78BC989C194C769378751BE9 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					3B6E8AD87F604222D090F9B4 = {
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 65D3F39018083A553AFD3316 /* Build configuration list for PBXProject "Endzone" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 446E07FC8285227BFFAF9297;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = DA1953641839DCD4D3EEC92C /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				3B6E8AD87F604222D090F9B4 /* Endzone */,
+				ECBD4D61A1110C3FA7C83710 /* EndzoneTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		823715407C08D97C2288F890 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1DE9621B93C91E09857FB0C1 /* FakeEndzoneAPITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		94F1A42D4D7A5B211191EAD7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BA645E4B9F28EC93C0F70EF9 /* AppDelegate.swift in Sources */,
+				A35232C45AD2BA678370E271 /* AuthManager.swift in Sources */,
+				BD4CA22347ABE179EA236318 /* ContentView.swift in Sources */,
+				6625CDC54858661D56BEFC70 /* DTOs.swift in Sources */,
+				DB473976B80A2B1509EE97D5 /* EndzoneAPI.swift in Sources */,
+				493030820B1F78B1115C6774 /* EndzoneApp.swift in Sources */,
+				9FA239F26C0069DAC6D78348 /* FakeEndzoneAPI.swift in Sources */,
+				508E706D988C98C2ACFA3E88 /* GameState.swift in Sources */,
+				03E531A3B424BFB6C4A75223 /* LeagueConfig.swift in Sources */,
+				90B3142C6A34BE3392DD36AA /* LeagueImportView.swift in Sources */,
+				48197E38986A35DE0E5703A5 /* LiveFeedView.swift in Sources */,
+				6259F3A109F3A8943816A9E3 /* PushNotificationManager.swift in Sources */,
+				0586D19DF7176A3E6DEBE73A /* ScoringEvent.swift in Sources */,
+				F416C6C24A8BD4D3E1B6109D /* SignInView.swift in Sources */,
+				CD20E3303651D864E097616C /* URLSessionEndzoneAPI.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		442B551593023A3F6655AA11 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3B6E8AD87F604222D090F9B4 /* Endzone */;
+			targetProxy = 75F435C3AE95F7BAAC5E926F /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		221FFDD472AE8F4586446BFD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		32A4043606CCBFECC3708733 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.endzone.EndzoneTests;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Endzone.app/Endzone";
+			};
+			name = Release;
+		};
+		4CC1735EB8F6F042108D5909 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.endzone.EndzoneTests;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Endzone.app/Endzone";
+			};
+			name = Debug;
+		};
+		71D5BF0B7800FA46F512684F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Generated/Endzone.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = Generated/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.endzone.app;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		A0FDC9150260AAC7862779B5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		A4FECF3D979D75192B7A99EA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Generated/Endzone.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = Generated/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.endzone.app;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		0A4902CB23E6EBDF567F7B77 /* Build configuration list for PBXNativeTarget "EndzoneTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4CC1735EB8F6F042108D5909 /* Debug */,
+				32A4043606CCBFECC3708733 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		65D3F39018083A553AFD3316 /* Build configuration list for PBXProject "Endzone" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A0FDC9150260AAC7862779B5 /* Debug */,
+				221FFDD472AE8F4586446BFD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		7FC1FF04B0AF2949F1A2AF3D /* Build configuration list for PBXNativeTarget "Endzone" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A4FECF3D979D75192B7A99EA /* Debug */,
+				71D5BF0B7800FA46F512684F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 78BC989C194C769378751BE9 /* Project object */;
+}

@@ -4,7 +4,7 @@ import json
 
 # API Gateway HTTP API's JWT authorizer verifies the Sign in with Apple
 # identity token (signature, issuer, audience, expiry) *before* invoking
-# the Lambda — see template.yaml's FantaseeHttpApi. By the time a handler
+# the Lambda — see template.yaml's EndzoneHttpApi. By the time a handler
 # sees this event, `sub` is already a trusted claim; no token verification
 # needed here. Per Apple's documented identity-token format (stable OIDC
 # claims: iss=https://appleid.apple.com, aud=bundle ID for native apps,

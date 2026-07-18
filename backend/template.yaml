@@ -1,7 +1,7 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Description: >
-  Fantasee backend — checker Lambda (every ~15 min, detects a live game)
+  Endzone backend — checker Lambda (every ~15 min, detects a live game)
   starts a Step Functions execution that polls that game every ~90s until
   it goes final. Step Functions is used for the poll loop instead of a
   second EventBridge rule because EventBridge's native rate()/cron()
@@ -24,7 +24,7 @@ Parameters:
     Description: Contents of the APNs .p8 auth key file
   ApnsBundleId:
     Type: String
-    Description: iOS app's bundle identifier. Dual use — APNs topic AND the JWT "aud" claim FantaseeHttpApi's authorizer checks Sign in with Apple identity tokens against, since both are the same bundle ID for a native app.
+    Description: iOS app's bundle identifier. Dual use — APNs topic AND the JWT "aud" claim EndzoneHttpApi's authorizer checks Sign in with Apple identity tokens against, since both are the same bundle ID for a native app.
   ApnsSandbox:
     Type: String
     Default: "true"
@@ -47,7 +47,7 @@ Resources:
   LeagueConfigTable:
     Type: AWS::Serverless::SimpleTable
     Properties:
-      TableName: fantasee-league-config
+      TableName: endzone-league-config
       PrimaryKey:
         Name: userId
         Type: String
@@ -55,7 +55,7 @@ Resources:
   LiveGameStateTable:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: fantasee-live-game-state
+      TableName: endzone-live-game-state
       AttributeDefinitions:
         - AttributeName: gameId
           AttributeType: S
@@ -74,7 +74,7 @@ Resources:
   # the time a handler runs, requestContext.authorizer.jwt.claims.sub is
   # already a trusted userId. HTTP API (not REST API) specifically because
   # it has this JWT authorizer built in.
-  FantaseeHttpApi:
+  EndzoneHttpApi:
     Type: AWS::Serverless::HttpApi
     Properties:
       Auth:
@@ -102,7 +102,7 @@ Resources:
         ImportLeague:
           Type: HttpApi
           Properties:
-            ApiId: !Ref FantaseeHttpApi
+            ApiId: !Ref EndzoneHttpApi
             Path: /leagues
             Method: POST
 
@@ -121,7 +121,7 @@ Resources:
         RegisterDeviceToken:
           Type: HttpApi
           Properties:
-            ApiId: !Ref FantaseeHttpApi
+            ApiId: !Ref EndzoneHttpApi
             Path: /device-token
             Method: PUT
 
@@ -143,20 +143,20 @@ Resources:
         GetLiveGame:
           Type: HttpApi
           Properties:
-            ApiId: !Ref FantaseeHttpApi
+            ApiId: !Ref EndzoneHttpApi
             Path: /live-game
             Method: GET
 
   ScoringEventsDLQ:
     Type: AWS::SQS::Queue
     Properties:
-      QueueName: fantasee-scoring-events-dlq
+      QueueName: endzone-scoring-events-dlq
       MessageRetentionPeriod: 1209600 # 14 days
 
   ScoringEventsQueue:
     Type: AWS::SQS::Queue
     Properties:
-      QueueName: fantasee-scoring-events
+      QueueName: endzone-scoring-events
       VisibilityTimeout: 60
       RedrivePolicy:
         deadLetterTargetArn: !GetAtt ScoringEventsDLQ.Arn
@@ -205,7 +205,7 @@ Resources:
   PollerStateMachine:
     Type: AWS::Serverless::StateMachine
     Properties:
-      Name: fantasee-poller
+      Name: endzone-poller
       DefinitionUri: statemachine/poller.asl.json
       DefinitionSubstitutions:
         PollerFunctionArn: !GetAtt PollerFunction.Arn
@@ -229,7 +229,7 @@ Resources:
           Type: Schedule
           Properties:
             Schedule: rate(15 minutes)
-            Name: fantasee-checker-schedule
+            Name: endzone-checker-schedule
             Description: Checks every ~15 min whether a game is live
             Enabled: true
 
@@ -240,7 +240,7 @@ Resources:
   BillingAlarmTopic:
     Type: AWS::SNS::Topic
     Properties:
-      TopicName: fantasee-billing-alerts
+      TopicName: endzone-billing-alerts
 
   BillingAlarmSubscription:
     Type: AWS::SNS::Subscription
@@ -252,7 +252,7 @@ Resources:
   BillingAlarm:
     Type: AWS::CloudWatch::Alarm
     Properties:
-      AlarmName: fantasee-billing-guardrail
+      AlarmName: endzone-billing-guardrail
       AlarmDescription: Estimated AWS charges exceeded $5.
       Namespace: AWS/Billing
       MetricName: EstimatedCharges
@@ -286,5 +286,5 @@ Outputs:
     Value: !Ref GetLiveGameFunction
   BillingAlarmTopicArn:
     Value: !Ref BillingAlarmTopic
-  FantaseeHttpApiUrl:
-    Value: !Sub "https://${FantaseeHttpApi}.execute-api.${AWS::Region}.amazonaws.com"
+  EndzoneHttpApiUrl:
+    Value: !Sub "https://${EndzoneHttpApi}.execute-api.${AWS::Region}.amazonaws.com"

@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct LiveFeedView: View {
-    @Environment(\.fantaseeAPI) private var api
+    @Environment(\.endzoneAPI) private var api
     @Environment(AuthManager.self) private var authManager
 
     @State private var gameState: GameStateDTO?

@@ -13,7 +13,7 @@ def _event(body: dict | None) -> dict:
 
 @patch("api.register_device_token.app.boto3.resource")
 def test_registers_device_token_for_authenticated_user(mock_resource, monkeypatch):
-    monkeypatch.setenv("LEAGUE_CONFIG_TABLE", "fantasee-league-config")
+    monkeypatch.setenv("LEAGUE_CONFIG_TABLE", "endzone-league-config")
     mock_table = MagicMock()
     mock_resource.return_value.Table.return_value = mock_table
 

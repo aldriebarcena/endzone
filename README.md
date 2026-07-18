@@ -1,4 +1,4 @@
-# Fantasee
+# Endzone
 
 Fantasy football live-feed iOS app — real NFL scoring plays turned into personalized fantasy-point push notifications. A portfolio project: full-stack (SwiftUI + AWS serverless), built with a strict "verify against real data, never guess" discipline throughout.
 
@@ -59,7 +59,7 @@ sam validate --lint && sam build  # confirms the infra is real and deployable
 **iOS** (Xcode 16+, iOS 17+ simulator):
 ```
 cd ios
-open Fantasee.xcodeproj          # or: xcodebuild -project Fantasee.xcodeproj -scheme Fantasee -destination 'platform=iOS Simulator,name=iPhone 17' build
+open Endzone.xcodeproj          # or: xcodebuild -project Endzone.xcodeproj -scheme Endzone -destination 'platform=iOS Simulator,name=iPhone 17' build
 ```
 
 ## Docs

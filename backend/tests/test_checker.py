@@ -22,7 +22,7 @@ def test_pick_game_to_track_returns_none_when_no_live_games():
 @patch("checker.app.boto3.client")
 @patch("checker.app.fetch_games_for_date")
 def test_handler_starts_execution_for_live_game(mock_fetch, mock_boto_client, monkeypatch):
-    monkeypatch.setenv("POLLER_STATE_MACHINE_ARN", "arn:aws:states:us-east-1:123:stateMachine:fantasee-poller")
+    monkeypatch.setenv("POLLER_STATE_MACHINE_ARN", "arn:aws:states:us-east-1:123:stateMachine:endzone-poller")
     mock_fetch.return_value = LIVE_GAMES
     mock_sfn = MagicMock()
     mock_boto_client.return_value = mock_sfn
@@ -53,7 +53,7 @@ def test_handler_noop_when_no_live_games(mock_fetch, mock_boto_client):
 @patch("checker.app.boto3.client")
 @patch("checker.app.fetch_games_for_date")
 def test_handler_treats_already_running_execution_as_success(mock_fetch, mock_boto_client, monkeypatch):
-    monkeypatch.setenv("POLLER_STATE_MACHINE_ARN", "arn:aws:states:us-east-1:123:stateMachine:fantasee-poller")
+    monkeypatch.setenv("POLLER_STATE_MACHINE_ARN", "arn:aws:states:us-east-1:123:stateMachine:endzone-poller")
     mock_fetch.return_value = LIVE_GAMES
     mock_sfn = MagicMock()
     mock_sfn.exceptions.ExecutionAlreadyExists = type("ExecutionAlreadyExists", (Exception,), {})

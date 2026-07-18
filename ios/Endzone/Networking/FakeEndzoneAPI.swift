@@ -6,7 +6,7 @@ import Foundation
 // in backend/tests/fixtures/tank01_box_score_final.json (Phase 2), and
 // the point values are the exact real numbers computed and verified in
 // backend/tests/test_fantasy_points.py — not made up for the demo.
-final class FakeFantaseeAPI: FantaseeAPI {
+final class FakeEndzoneAPI: EndzoneAPI {
     func fetchLiveGame(authToken: String) async throws -> GameStateDTO {
         let gameId = "20260104_NYJ@BUF"
         return GameStateDTO(

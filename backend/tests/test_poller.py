@@ -16,7 +16,7 @@ ESPN_FIXTURE = json.loads((Path(__file__).parent / "fixtures" / "espn_summary.js
 @patch("poller.app.boto3.resource")
 @patch("poller.app.fetch_box_score_raw")
 def test_first_poll_seeds_state_without_emitting_events(mock_fetch, mock_resource, monkeypatch):
-    monkeypatch.setenv("LIVE_GAME_STATE_TABLE", "fantasee-live-game-state")
+    monkeypatch.setenv("LIVE_GAME_STATE_TABLE", "endzone-live-game-state")
     mock_fetch.return_value = TANK01_FIXTURE
 
     mock_table = MagicMock()
@@ -40,9 +40,9 @@ def test_first_poll_seeds_state_without_emitting_events(mock_fetch, mock_resourc
 def test_second_poll_publishes_new_events_with_espn_enrichment(
     mock_fetch, mock_resource, mock_client, mock_fetch_espn, monkeypatch
 ):
-    monkeypatch.setenv("LIVE_GAME_STATE_TABLE", "fantasee-live-game-state")
+    monkeypatch.setenv("LIVE_GAME_STATE_TABLE", "endzone-live-game-state")
     monkeypatch.setenv(
-        "SCORING_EVENTS_QUEUE_URL", "https://sqs.us-east-1.amazonaws.com/123/fantasee-scoring-events"
+        "SCORING_EVENTS_QUEUE_URL", "https://sqs.us-east-1.amazonaws.com/123/endzone-scoring-events"
     )
     earlier = parse_box_score({**TANK01_FIXTURE, "scoringPlays": TANK01_FIXTURE["scoringPlays"][:3]})
     mock_fetch.return_value = TANK01_FIXTURE
@@ -83,9 +83,9 @@ def test_second_poll_publishes_new_events_with_espn_enrichment(
 def test_third_poll_carries_forward_enrichment_without_refetching_espn(
     mock_fetch, mock_resource, mock_client, mock_fetch_espn, monkeypatch
 ):
-    monkeypatch.setenv("LIVE_GAME_STATE_TABLE", "fantasee-live-game-state")
+    monkeypatch.setenv("LIVE_GAME_STATE_TABLE", "endzone-live-game-state")
     monkeypatch.setenv(
-        "SCORING_EVENTS_QUEUE_URL", "https://sqs.us-east-1.amazonaws.com/123/fantasee-scoring-events"
+        "SCORING_EVENTS_QUEUE_URL", "https://sqs.us-east-1.amazonaws.com/123/endzone-scoring-events"
     )
     espn_plays = _parse_espn_fixture()
 
@@ -124,9 +124,9 @@ def test_third_poll_carries_forward_enrichment_without_refetching_espn(
 @patch("poller.app.boto3.resource")
 @patch("poller.app.fetch_box_score_raw")
 def test_no_espn_game_id_publishes_without_enrichment(mock_fetch, mock_resource, mock_client, monkeypatch):
-    monkeypatch.setenv("LIVE_GAME_STATE_TABLE", "fantasee-live-game-state")
+    monkeypatch.setenv("LIVE_GAME_STATE_TABLE", "endzone-live-game-state")
     monkeypatch.setenv(
-        "SCORING_EVENTS_QUEUE_URL", "https://sqs.us-east-1.amazonaws.com/123/fantasee-scoring-events"
+        "SCORING_EVENTS_QUEUE_URL", "https://sqs.us-east-1.amazonaws.com/123/endzone-scoring-events"
     )
     earlier = parse_box_score({**TANK01_FIXTURE, "scoringPlays": TANK01_FIXTURE["scoringPlays"][:5]})
     mock_fetch.return_value = TANK01_FIXTURE
@@ -154,9 +154,9 @@ def test_espn_fetch_failure_does_not_break_publishing(
 ):
     # ESPN is unofficial/unsupported -- a fetch failure here must not
     # break the core scoring pipeline, which only depends on Tank01.
-    monkeypatch.setenv("LIVE_GAME_STATE_TABLE", "fantasee-live-game-state")
+    monkeypatch.setenv("LIVE_GAME_STATE_TABLE", "endzone-live-game-state")
     monkeypatch.setenv(
-        "SCORING_EVENTS_QUEUE_URL", "https://sqs.us-east-1.amazonaws.com/123/fantasee-scoring-events"
+        "SCORING_EVENTS_QUEUE_URL", "https://sqs.us-east-1.amazonaws.com/123/endzone-scoring-events"
     )
     earlier = parse_box_score({**TANK01_FIXTURE, "scoringPlays": TANK01_FIXTURE["scoringPlays"][:5]})
     mock_fetch.return_value = TANK01_FIXTURE
@@ -178,7 +178,7 @@ def test_espn_fetch_failure_does_not_break_publishing(
 @patch("poller.app.boto3.resource")
 @patch("poller.app.fetch_box_score_raw")
 def test_in_progress_game_is_not_final(mock_fetch, mock_resource, monkeypatch):
-    monkeypatch.setenv("LIVE_GAME_STATE_TABLE", "fantasee-live-game-state")
+    monkeypatch.setenv("LIVE_GAME_STATE_TABLE", "endzone-live-game-state")
     mock_fetch.return_value = {**TANK01_FIXTURE, "gameStatus": "In Progress", "gameStatusCode": "1"}
 
     mock_table = MagicMock()
