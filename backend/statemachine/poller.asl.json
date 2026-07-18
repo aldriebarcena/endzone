@@ -1,0 +1,30 @@
+{
+  "Comment": "Polls one live NFL game every ~90s until it goes final. Started by the checker Lambda; exits on its own once the poller Lambda reports is_final.",
+  "StartAt": "PollGame",
+  "States": {
+    "PollGame": {
+      "Type": "Task",
+      "Resource": "${PollerFunctionArn}",
+      "Next": "IsFinal"
+    },
+    "IsFinal": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.is_final",
+          "BooleanEquals": true,
+          "Next": "Done"
+        }
+      ],
+      "Default": "Wait90Seconds"
+    },
+    "Wait90Seconds": {
+      "Type": "Wait",
+      "Seconds": 90,
+      "Next": "PollGame"
+    },
+    "Done": {
+      "Type": "Succeed"
+    }
+  }
+}

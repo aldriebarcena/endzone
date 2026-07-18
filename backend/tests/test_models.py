@@ -1,6 +1,6 @@
 from datetime import datetime, timezone
 
-from src.models import GameState, ScoringEvent
+from models import GameState, ScoringEvent
 
 
 def _event(**overrides) -> ScoringEvent:

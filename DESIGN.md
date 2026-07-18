@@ -28,9 +28,9 @@ Purpose: new-grad portfolio project. Fills resume gaps (client-facing app, real-
 - Sign in with Apple for user auth (not Firebase Auth, not custom login) — aligns with Apple platform conventions, relevant to the Apple-adjacent goal.
 
 ### Backend (AWS, serverless)
-- **Compute:** AWS Lambda + EventBridge scheduled rule.
+- **Compute:** AWS Lambda + EventBridge scheduled rule + Step Functions.
   - Rationale over Fargate: workload is bursty/short/stateless (fetch → diff → push), not benefiting from a persistent warm process. Fargate would just be a third rendition of "I can run a container" on your resume; Lambda diversifies it instead. Cheaper (near-$0 given actual usage volume) and gives a real, defensible "why not always-on compute" interview answer.
-  - **Two-tier scheduling:** a lightweight checker Lambda runs every ~15 min to determine "is a game currently live." Only when true does it enable/trigger the tight 90s polling rule. Avoids running an idle poller 90%+ of the week.
+  - **Two-tier scheduling:** a lightweight checker Lambda runs every ~15 min (EventBridge rate rule) to determine "is a game currently live." When true, it starts a **Step Functions** execution (idempotent — named after the game ID, so a duplicate start while one's already running is a harmless no-op) that loops poll → `Wait` 90s → poll until the poller Lambda reports the game is final, then exits on its own. Step Functions is the mechanism for the tight loop, not a second EventBridge rule, because EventBridge's `rate()`/`cron()` granularity bottoms out at 60 seconds — there's no native way to schedule every 90s. Avoids running an idle poller 90%+ of the week, and avoids the alternative of loosening the interval to 60s (which would burn through the data provider's free-tier budget faster for no benefit).
 - **Fan-out:** SQS decouples "new scoring event detected" from "push notifications to subscribed users."
 - **Push delivery:** SNS (or a Lambda calling APNs directly) triggered off the SQS queue.
 - **Storage:** DynamoDB, two tables:
@@ -63,7 +63,7 @@ Purpose: new-grad portfolio project. Fills resume gaps (client-facing app, real-
 
 1. **Data model + adapter interface** (`GameState`, `ScoringEvent`, `fetchGameState()` stub) — before touching AWS or Swift.
 2. **Tank01 integration**, validated locally (plain script, not yet Lambda) against a live/recent game — confirm you can diff two snapshots and detect a scoring event. **Verify this first, before building any AWS architecture around it** — this is the step most likely to reveal the free tier doesn't actually give usable in-play NFL data (delay, incompleteness, etc.).
-3. **DynamoDB tables + Lambda poller**, deployed via SAM.
+3. **DynamoDB tables + checker/poller Lambdas + Step Functions poll loop**, deployed via SAM.
 4. **SQS + push Lambda + APNs** fan-out.
 5. **Sleeper import** (independent track, parallelizable with 1–4).
 6. **iOS app** — can be stubbed against fake data earlier to parallelize, but backend correctness is the higher-risk piece, so it's front-loaded in this sequence.

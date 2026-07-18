@@ -5,21 +5,34 @@ from datetime import datetime, timezone
 
 import requests
 
-from ..models import GameState, ScoringEvent
+from models import GameState, ScoringEvent
 
 HOST = "tank01-nfl-live-in-game-real-time-statistics-nfl.p.rapidapi.com"
 
 
-def fetch_game_state(game_id: str) -> GameState:
+def _get(endpoint: str, params: dict[str, str]) -> dict:
     api_key = os.environ["RAPIDAPI_KEY"]
     response = requests.get(
-        f"https://{HOST}/getNFLBoxScore",
+        f"https://{HOST}/{endpoint}",
         headers={"x-rapidapi-host": HOST, "x-rapidapi-key": api_key},
-        params={"gameID": game_id},
+        params=params,
         timeout=10,
     )
     response.raise_for_status()
-    return parse_box_score(response.json()["body"])
+    return response.json()["body"]
+
+
+def fetch_game_state(game_id: str) -> GameState:
+    return parse_box_score(_get("getNFLBoxScore", {"gameID": game_id}))
+
+
+def fetch_games_for_date(date: str) -> list[dict]:
+    """date is YYYYMMDD. Returns the raw provider game list — gameID,
+    gameStatusCode (0 not started, 1 in progress, 2 final, 3 postponed,
+    4 suspended), among other fields. No internal model for this yet;
+    the checker only needs gameID + gameStatusCode.
+    """
+    return _get("getNFLGamesForDate", {"gameDate": date})
 
 
 def parse_box_score(box_score: dict) -> GameState:

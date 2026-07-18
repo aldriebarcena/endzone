@@ -1,8 +1,8 @@
 import json
 from pathlib import Path
 
-from src.adapters.tank01 import parse_box_score
-from src.diffing import new_events
+from adapters.tank01 import parse_box_score
+from diffing import new_events
 
 FIXTURE = json.loads(
     (Path(__file__).parent / "fixtures" / "tank01_box_score_final.json").read_text()

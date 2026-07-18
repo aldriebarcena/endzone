@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from .models import GameState, ScoringEvent
+from models import GameState, ScoringEvent
 
 
 def new_events(previous: GameState, current: GameState) -> tuple[ScoringEvent, ...]:
