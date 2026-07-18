@@ -39,3 +39,22 @@ class GameState:
     clock: str | None
     events: tuple[ScoringEvent, ...]
     fetched_at: datetime
+
+
+@dataclass(frozen=True)
+class SleeperLeague:
+    """scoring_settings is Sleeper's real per-stat point values for this
+    league (e.g. pass_td, rush_td, rec, fum_lost — dozens of keys) — used
+    as-is to seed LeagueConfig's custom point values on import. Mapping
+    these granular keys against Tank01's coarse ScoringEvent.scoring_type
+    ("TD"/"FG"/etc, no pass/rush/rec distinction) is still unresolved —
+    see PROJECT_PLAN.md open questions.
+    """
+
+    league_id: str
+    name: str
+    season: str
+    status: str
+    total_rosters: int
+    roster_positions: tuple[str, ...]
+    scoring_settings: dict[str, float]
