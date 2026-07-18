@@ -3,11 +3,12 @@ from __future__ import annotations
 import json
 import logging
 import os
+from dataclasses import replace
 
 import boto3
 
 import storage
-from adapters.espn import EspnScoringPlay, fetch_scoring_plays
+from adapters.espn import EspnScoringPlay, fetch_scoring_plays, to_dict as espn_play_to_dict
 from adapters.tank01 import (
     extract_player_categories,
     extract_player_names,
@@ -35,23 +36,41 @@ def handler(event, context):
 
     previous_item = table.get_item(Key={"gameId": game_id}).get("Item")
     previous = storage.from_item(previous_item) if previous_item else None
+    previous_by_id = {e.event_id: e for e in (previous.events if previous else ())}
 
     box_score = fetch_box_score_raw(game_id)
     current = parse_box_score(box_score)
 
-    # First poll of a game seeds state without emitting events — otherwise
-    # every scoring play that already happened before we started tracking
-    # would fire as a "new" notification.
-    events = () if previous is None else new_events(previous, current)
+    # First poll of a game seeds state without treating anything as
+    # "new" — otherwise every scoring play that already happened before
+    # we started tracking would fire as a fresh notification.
+    new_ids = set() if previous is None else {e.event_id for e in new_events(previous, current)}
 
-    if events:
-        espn_plays = _fetch_espn_plays_safely(espn_game_id) if espn_game_id else ()
-        player_categories = extract_player_categories(box_score) if espn_plays else {}
-        player_names = extract_player_names(box_score) if espn_plays else {}
-        for scoring_event in events:
-            logger.info("new scoring event: %s", scoring_event.description)
-            _publish(scoring_event, espn_plays, player_categories, player_names)
+    # ESPN is fetched once per poll (not per event) and only when there's
+    # something new to enrich — already-known events carry their
+    # enrichment forward from the previous poll instead of re-fetching.
+    if new_ids and espn_game_id:
+        espn_plays = _fetch_espn_plays_safely(espn_game_id)
+        player_categories = extract_player_categories(box_score)
+        player_names = extract_player_names(box_score)
+    else:
+        espn_plays, player_categories, player_names = (), {}, {}
 
+    enriched_events = tuple(
+        _resolve_event(e, new_ids, previous_by_id, espn_plays, player_categories, player_names)
+        for e in current.events
+    )
+    current = replace(current, events=enriched_events)
+
+    new_scoring_events = tuple(e for e in enriched_events if e.event_id in new_ids)
+    for scoring_event in new_scoring_events:
+        logger.info("new scoring event: %s", scoring_event.description)
+        _publish(scoring_event)
+
+    # Stored with enrichment attached to every event (not just this
+    # poll's new ones) so a later on-demand read (GET /live-game) can
+    # compute personalized points for the whole game, not only whatever
+    # was newest when someone happened to open the app.
     table.put_item(Item=storage.to_item(current))
 
     is_final = current.status_code == FINAL_STATUS_CODE
@@ -59,7 +78,7 @@ def handler(event, context):
         "game_id": game_id,
         "espn_game_id": espn_game_id,
         "is_final": is_final,
-        "new_event_count": len(events),
+        "new_event_count": len(new_scoring_events),
     }
 
 
@@ -82,27 +101,62 @@ def _fetch_espn_plays_safely(espn_game_id: str) -> tuple[EspnScoringPlay, ...]:
         return ()
 
 
-def _publish(
+def _resolve_event(
+    scoring_event: ScoringEvent,
+    new_ids: set[str],
+    previous_by_id: dict[str, ScoringEvent],
+    espn_plays: tuple[EspnScoringPlay, ...],
+    player_categories: dict[str, frozenset[str]],
+    player_names: dict[str, str],
+) -> ScoringEvent:
+    if scoring_event.event_id in new_ids:
+        return _enrich(scoring_event, espn_plays, player_categories, player_names)
+
+    prior = previous_by_id.get(scoring_event.event_id)
+    if prior is not None and prior.espn_play is not None:
+        return replace(
+            scoring_event,
+            espn_play=prior.espn_play,
+            player_categories=prior.player_categories,
+            player_names=prior.player_names,
+        )
+    return scoring_event
+
+
+def _enrich(
     scoring_event: ScoringEvent,
     espn_plays: tuple[EspnScoringPlay, ...],
     player_categories: dict[str, frozenset[str]],
     player_names: dict[str, str],
-) -> None:
-    # Point *values* are league-dependent (each push subscriber can have
-    # different LeagueConfig.pointValues), so the actual computation
-    # happens in push.py, per subscriber — this only packages the raw
-    # ingredients fantasy_points.points_for_matched_play() needs, scoped
-    # to just the players on this play (not the whole game's roster).
+) -> ScoringEvent:
+    # Point *values* are league-dependent (each push subscriber, and each
+    # GET /live-game caller, can have different LeagueConfig.pointValues),
+    # so the actual point computation happens downstream, per requester —
+    # this only attaches the raw ingredients points_for_matched_play()
+    # needs, scoped to just the players on this play.
     espn_play = match_espn_play(scoring_event, espn_plays) if espn_plays else None
-    relevant_categories: dict[str, list[str]] = {}
-    relevant_names: dict[str, str] = {}
-    if espn_play is not None:
-        for player_id in scoring_event.player_ids:
-            if player_id in player_categories:
-                relevant_categories[player_id] = sorted(player_categories[player_id])
-            if player_id in player_names:
-                relevant_names[player_id] = player_names[player_id]
+    if espn_play is None:
+        return scoring_event
 
+    relevant_categories = {
+        player_id: tuple(sorted(player_categories[player_id]))
+        for player_id in scoring_event.player_ids
+        if player_id in player_categories
+    }
+    relevant_names = {
+        player_id: player_names[player_id]
+        for player_id in scoring_event.player_ids
+        if player_id in player_names
+    }
+    return replace(
+        scoring_event,
+        espn_play=espn_play_to_dict(espn_play),
+        player_categories=relevant_categories,
+        player_names=relevant_names,
+    )
+
+
+def _publish(scoring_event: ScoringEvent) -> None:
     sqs = boto3.client("sqs")
     sqs.send_message(
         QueueUrl=os.environ["SCORING_EVENTS_QUEUE_URL"],
@@ -118,20 +172,11 @@ def _publish(
                 "home_score": scoring_event.home_score,
                 "away_score": scoring_event.away_score,
                 "player_ids": list(scoring_event.player_ids),
-                "espn_play": _espn_play_to_dict(espn_play) if espn_play else None,
-                "player_categories": relevant_categories,
-                "player_names": relevant_names,
+                "espn_play": scoring_event.espn_play,
+                "player_categories": {
+                    pid: list(cats) for pid, cats in scoring_event.player_categories.items()
+                },
+                "player_names": scoring_event.player_names,
             }
         ),
     )
-
-
-def _espn_play_to_dict(espn_play: EspnScoringPlay) -> dict:
-    return {
-        "play_type": espn_play.play_type,
-        "text": espn_play.text,
-        "yardage": espn_play.yardage,
-        "team": espn_play.team,
-        "period": espn_play.period,
-        "clock": espn_play.clock,
-    }

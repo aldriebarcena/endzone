@@ -2,6 +2,7 @@ import SwiftUI
 
 struct LiveFeedView: View {
     @Environment(\.fantaseeAPI) private var api
+    @Environment(AuthManager.self) private var authManager
 
     @State private var gameState: GameStateDTO?
     @State private var errorMessage: String?
@@ -28,6 +29,17 @@ struct LiveFeedView: View {
                                 Text("\(event.team) · \(event.scoringType) · \(event.period) \(event.gameClock)")
                                     .font(.caption)
                                     .foregroundStyle(.secondary)
+                                // The actual point of the app: real
+                                // per-player fantasy points, computed
+                                // against the signed-in user's own
+                                // league scoring settings (empty when
+                                // the play type isn't scored yet, or no
+                                // league's been imported).
+                                ForEach(pointsBreakdown(for: event), id: \.playerId) { entry in
+                                    Text("\(entry.name) +\(entry.points, specifier: "%.2f") pts")
+                                        .font(.subheadline.bold())
+                                        .foregroundStyle(.green)
+                                }
                             }
                         }
                     }
@@ -54,17 +66,27 @@ struct LiveFeedView: View {
     }
 
     private func loadGame() async {
-        // Demo game ID stands in for real game selection, which needs
-        // the same missing per-user context as league selection did
-        // (see PROJECT_PLAN.md's checker open question).
+        guard let authToken = authManager.identityToken else {
+            errorMessage = "Not signed in"
+            return
+        }
         do {
-            gameState = try await api.fetchLiveGame(gameId: "demo")
+            gameState = try await api.fetchLiveGame(authToken: authToken)
         } catch {
             errorMessage = "Couldn't load game: \(error.localizedDescription)"
         }
+    }
+
+    private func pointsBreakdown(for event: ScoringEventDTO) -> [(playerId: String, name: String, points: Double)] {
+        event.points
+            .map { playerId, points in
+                (playerId: playerId, name: event.playerNames[playerId] ?? playerId, points: points)
+            }
+            .sorted { $0.points > $1.points }
     }
 }
 
 #Preview {
     LiveFeedView()
+        .environment(AuthManager())
 }

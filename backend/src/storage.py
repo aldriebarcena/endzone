@@ -54,6 +54,9 @@ def _event_to_item(event: ScoringEvent) -> dict:
         "awayScore": event.away_score,
         "playerIds": list(event.player_ids),
         "fetchedAt": event.fetched_at.isoformat(),
+        "espnPlay": event.espn_play,
+        "playerCategories": {pid: list(cats) for pid, cats in event.player_categories.items()},
+        "playerNames": event.player_names,
     }
 
 
@@ -70,4 +73,9 @@ def _event_from_item(item: dict) -> ScoringEvent:
         away_score=int(item["awayScore"]),
         player_ids=tuple(item.get("playerIds", ())),
         fetched_at=datetime.fromisoformat(item["fetchedAt"]),
+        espn_play=item.get("espnPlay"),
+        player_categories={
+            pid: tuple(cats) for pid, cats in item.get("playerCategories", {}).items()
+        },
+        player_names=item.get("playerNames", {}),
     )

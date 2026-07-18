@@ -26,6 +26,33 @@ class EspnScoringPlay:
     clock: str
 
 
+def to_dict(espn_play: EspnScoringPlay) -> dict:
+    """Plain-dict form for storage.py/SQS messages — those boundaries
+    intentionally don't import EspnScoringPlay directly (keeps models.py
+    free of an adapters dependency), so this is the shared conversion
+    point rather than each caller reimplementing it.
+    """
+    return {
+        "play_type": espn_play.play_type,
+        "text": espn_play.text,
+        "yardage": espn_play.yardage,
+        "team": espn_play.team,
+        "period": espn_play.period,
+        "clock": espn_play.clock,
+    }
+
+
+def from_dict(data: dict) -> EspnScoringPlay:
+    return EspnScoringPlay(
+        play_type=data["play_type"],
+        text=data["text"],
+        yardage=data["yardage"],
+        team=data["team"],
+        period=data["period"],
+        clock=data["clock"],
+    )
+
+
 def fetch_scoring_plays(espn_game_id: str) -> tuple[EspnScoringPlay, ...]:
     response = requests.get(
         f"{HOST}/summary", params={"event": espn_game_id}, timeout=10

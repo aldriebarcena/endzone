@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime
 
 
@@ -12,6 +12,17 @@ class ScoringEvent:
     player_ids often includes multiple people (e.g. passer + receiver +
     kicker on a passing TD) with no reliable single "the" scorer in the
     raw data; description already names them in order for display.
+
+    espn_play/player_categories/player_names are the raw ingredients
+    fantasy_points.points_for_matched_play() needs — populated by
+    poller.py when it matches this event against ESPN's enrichment data,
+    and persisted (via storage.py) so a later on-demand read (the
+    GET /live-game API) can compute personalized points without
+    re-fetching ESPN. espn_play is kept as a plain dict here rather than
+    adapters.espn.EspnScoringPlay to avoid models.py depending on the
+    adapters package — same pattern poller.py already uses for the SQS
+    message. None/empty when no ESPN match was found (unhandled play
+    type, ESPN fetch failed, or espn_game_id wasn't available).
     """
 
     event_id: str
@@ -25,6 +36,9 @@ class ScoringEvent:
     away_score: int
     player_ids: tuple[str, ...]
     fetched_at: datetime
+    espn_play: dict | None = None
+    player_categories: dict[str, tuple[str, ...]] = field(default_factory=dict)
+    player_names: dict[str, str] = field(default_factory=dict)
 
 
 @dataclass(frozen=True)

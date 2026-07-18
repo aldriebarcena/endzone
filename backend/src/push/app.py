@@ -7,7 +7,7 @@ from datetime import datetime, timezone
 
 import boto3
 
-from adapters.espn import EspnScoringPlay
+from adapters.espn import from_dict as espn_play_from_dict
 from apns import build_auth_token, send_push
 from fantasy_points import points_for_matched_play
 from models import ScoringEvent
@@ -43,7 +43,8 @@ def handler(event, context):
 def _process_record(record: dict, subscribers: list[dict], auth_token: str) -> None:
     message = json.loads(record["body"])
     scoring_event = _event_from_message(message)
-    espn_play = _espn_play_from_message(message.get("espn_play"))
+    espn_play_data = message.get("espn_play")
+    espn_play = espn_play_from_dict(espn_play_data) if espn_play_data else None
     player_categories = {
         player_id: frozenset(categories)
         for player_id, categories in message.get("player_categories", {}).items()
@@ -107,19 +108,6 @@ def _event_from_message(message: dict) -> ScoringEvent:
         away_score=message["away_score"],
         player_ids=tuple(message.get("player_ids", ())),
         fetched_at=datetime.now(timezone.utc),
-    )
-
-
-def _espn_play_from_message(data: dict | None) -> EspnScoringPlay | None:
-    if data is None:
-        return None
-    return EspnScoringPlay(
-        play_type=data["play_type"],
-        text=data["text"],
-        yardage=data["yardage"],
-        team=data["team"],
-        period=data["period"],
-        clock=data["clock"],
     )
 
 

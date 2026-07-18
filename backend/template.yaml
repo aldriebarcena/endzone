@@ -125,6 +125,28 @@ Resources:
             Path: /device-token
             Method: PUT
 
+  GetLiveGameFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/
+      Handler: api.get_live_game.app.handler
+      Environment:
+        Variables:
+          LIVE_GAME_STATE_TABLE: !Ref LiveGameStateTable
+          LEAGUE_CONFIG_TABLE: !Ref LeagueConfigTable
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref LiveGameStateTable
+        - DynamoDBReadPolicy:
+            TableName: !Ref LeagueConfigTable
+      Events:
+        GetLiveGame:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref FantaseeHttpApi
+            Path: /live-game
+            Method: GET
+
   ScoringEventsDLQ:
     Type: AWS::SQS::Queue
     Properties:
@@ -260,6 +282,8 @@ Outputs:
     Value: !Ref PollerFunction
   PushFunctionName:
     Value: !Ref PushFunction
+  GetLiveGameFunctionName:
+    Value: !Ref GetLiveGameFunction
   BillingAlarmTopicArn:
     Value: !Ref BillingAlarmTopic
   FantaseeHttpApiUrl:

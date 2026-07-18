@@ -1,12 +1,12 @@
 import Foundation
 
 // The real backend implementation. Matches backend/template.yaml's
-// FantaseeHttpApi routes (POST /leagues, PUT /device-token) and the
-// Sign in with Apple JWT auth its authorizer expects. Untestable
-// end-to-end right now regardless — the API isn't deployed (see
-// PROJECT_PLAN.md's scope decision), so this is verified by matching
-// the backend's actual route/handler code, not by hitting a live
-// endpoint.
+// FantaseeHttpApi routes (GET /live-game, POST /leagues, PUT /device-
+// token) and the Sign in with Apple JWT auth its authorizer expects.
+// Untestable end-to-end right now regardless — the API isn't deployed
+// (see PROJECT_PLAN.md's scope decision), so this is verified by
+// matching the backend's actual route/handler code, not by hitting a
+// live endpoint.
 final class URLSessionFantaseeAPI: FantaseeAPI {
     private let baseURL: URL
     private let session: URLSession
@@ -31,9 +31,11 @@ final class URLSessionFantaseeAPI: FantaseeAPI {
         self.encoder = encoder
     }
 
-    func fetchLiveGame(gameId: String) async throws -> GameStateDTO {
-        let url = baseURL.appendingPathComponent("games").appendingPathComponent(gameId)
-        let (data, response) = try await session.data(from: url)
+    func fetchLiveGame(authToken: String) async throws -> GameStateDTO {
+        var request = URLRequest(url: baseURL.appendingPathComponent("live-game"))
+        request.setValue("Bearer \(authToken)", forHTTPHeaderField: "Authorization")
+
+        let (data, response) = try await session.data(for: request)
         try Self.validate(response)
         return try decoder.decode(GameStateDTO.self, from: data)
     }
