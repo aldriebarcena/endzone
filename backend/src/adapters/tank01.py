@@ -23,7 +23,44 @@ def _get(endpoint: str, params: dict[str, str]) -> dict:
 
 
 def fetch_game_state(game_id: str) -> GameState:
-    return parse_box_score(_get("getNFLBoxScore", {"gameID": game_id}))
+    return parse_box_score(fetch_box_score_raw(game_id))
+
+
+def fetch_box_score_raw(game_id: str) -> dict:
+    """Exposed separately (not just wrapped inside fetch_game_state) so
+    callers that also need extract_player_categories() can reuse the same
+    fetch instead of costing a second request against Tank01's scarce
+    budget.
+    """
+    return _get("getNFLBoxScore", {"gameID": game_id})
+
+
+def extract_player_names(box_score: dict) -> dict[str, str]:
+    """player_id -> longName ("Gabe Davis"). Used alongside
+    extract_player_categories() to disambiguate which of two same-
+    category players (e.g. a TD receiver vs. an attached two-point-
+    conversion's receiver, both "Receiving") is the actual scorer — see
+    fantasy_points.py.
+    """
+    return {
+        player_id: stats.get("longName", "")
+        for player_id, stats in box_score.get("playerStats", {}).items()
+    }
+
+
+def extract_player_categories(box_score: dict) -> dict[str, frozenset[str]]:
+    """player_id -> the set of stat categories ("Passing", "Rushing",
+    "Receiving", "Kicking", ...) present for them in this box score.
+    Used by fantasy_points.py to infer a scoring play's roles by
+    elimination within the play's own player_ids, since Tank01's
+    playerIDs list order isn't reliably [passer, receiver, kicker] (it
+    breaks on two-point-conversion plays — see PROJECT_PLAN.md).
+    """
+    ignored_keys = {"gameID", "teamID", "team", "teamAbv", "playerID", "longName", "snapCounts"}
+    return {
+        player_id: frozenset(k for k in stats if k not in ignored_keys)
+        for player_id, stats in box_score.get("playerStats", {}).items()
+    }
 
 
 def fetch_games_for_date(date: str) -> list[dict]:
