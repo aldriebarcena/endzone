@@ -8,11 +8,12 @@ Task checklist tracking progress against [DESIGN.md](DESIGN.md)'s Build order. P
 - [x] Define `fetchGameState(gameId) -> GameState` adapter function signature (stub, no real provider yet)
 - [x] Unit test scaffolding for model construction
 
-## Phase 2 — API-American-Football integration (local validation)
-- [ ] Get a RapidAPI key, subscribed to **API-American-Football** (not API-Football — that's soccer; see below)
+## Phase 2 — SportAPI7 integration (local validation)
+- [ ] Get a RapidAPI key, subscribed to **SportAPI7** (`rapidsportapi`) — https://rapidapi.com/rapidsportapi/api/sportapi7 (API-Football and API-American-Football, tried first, turned out to be soccer-only / a dead link respectively)
+- [ ] Confirm the actual free-tier request cap on the pricing page (assumed ~100/day in DESIGN.md, unconfirmed)
 - [x] Plain local script (not Lambda) to hit the provider and dump raw JSON for inspection — `backend/scripts/explore_api.py`
-- [ ] Run the script against a real game once a key exists, confirm actual field names/host (script's `RAPIDAPI_HOST` default is an unverified guess)
-- [ ] Implement the API-American-Football adapter (`backend/src/adapters/api_american_football.py`) conforming to `fetch_game_state()`, against the real response shape
+- [ ] Run the script against a real game once a key exists, confirm actual endpoint paths/host (script's `RAPIDAPI_HOST` default and example endpoint paths are unverified guesses)
+- [ ] Implement the SportAPI7 adapter (`backend/src/adapters/sportapi7.py`) conforming to `fetch_game_state()`, against the real response shape
 - [ ] Snapshot two consecutive fetches, diff them, confirm a scoring event is detectable
 - [ ] Write up findings — this step is most likely to reveal free-tier data quality problems (delay, incompleteness); confirm before building AWS around it
 
