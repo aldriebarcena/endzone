@@ -1,6 +1,6 @@
 # Endzone
 
-Fantasy football live-feed iOS app — real NFL scoring plays turned into personalized fantasy-point push notifications. A portfolio project: full-stack (SwiftUI + AWS serverless), built with a strict "verify against real data, never guess" discipline throughout.
+Fantasy football live-feed iOS app — real NFL scoring plays turned into personalized fantasy-point push notifications. A portfolio project: full-stack (SwiftUI + AWS serverless).
 
 <p float="left">
   <img src="docs/screenshots/sign-in.png" width="220" alt="Sign in with Apple screen" />
