@@ -21,6 +21,13 @@ struct SignInView: View {
             .frame(height: 44)
             .padding(.horizontal, 40)
             .padding(.top, 24)
+
+            #if DEBUG
+            Button("Continue as Demo User") {
+                authManager.signInAsDemoUser()
+            }
+            .padding(.top, 8)
+            #endif
         }
         .padding()
     }

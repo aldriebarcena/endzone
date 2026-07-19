@@ -28,4 +28,14 @@ final class AuthManager {
             // TODO: surface to UI instead of just logging.
         }
     }
+
+    #if DEBUG
+    // Real Sign in with Apple is unreliable in Simulator (needs a signed-in
+    // Apple ID, can hang on 2FA). This skips it for demoing the rest of the
+    // app against FakeEndzoneAPI, which never checks the token's contents.
+    func signInAsDemoUser() {
+        userId = "demo-user"
+        identityToken = "demo-token"
+    }
+    #endif
 }
