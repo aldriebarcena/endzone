@@ -61,6 +61,7 @@ sam validate --lint && sam build  # confirms the infra is real and deployable
 cd ios
 open Endzone.xcodeproj          # or: xcodebuild -project Endzone.xcodeproj -scheme Endzone -destination 'platform=iOS Simulator,name=iPhone 17' build
 ```
+Real Sign in with Apple in Simulator needs an Apple ID signed into the Simulator itself (Settings → Sign in to your iPhone) and can hang mid-flow regardless — a known Simulator limitation, not an app bug. To skip straight to the live feed, tap **Continue as Demo User** on the sign-in screen (DEBUG builds only; see `AuthManager.swift`).
 
 ## Docs
 
