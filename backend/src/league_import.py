@@ -9,7 +9,7 @@ def import_league(table, user_id: str, league_id: str) -> dict:
     """Fetches the Sleeper league and writes/overwrites this user's
     LeagueConfig item. Custom point values are seeded from Sleeper's own
     scoring_settings — accurate defaults reflecting the user's real
-    league, since no override UI/API exists yet (see PROJECT_PLAN.md).
+    league, since no override UI/API exists yet.
     Re-importing the same league_id overwrites pointValues, so any
     manual overrides a future override feature made would be lost; that
     feature doesn't exist yet so it isn't a real loss today, but is worth

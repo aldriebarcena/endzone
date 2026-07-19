@@ -54,7 +54,7 @@ def extract_player_categories(box_score: dict) -> dict[str, frozenset[str]]:
     Used by fantasy_points.py to infer a scoring play's roles by
     elimination within the play's own player_ids, since Tank01's
     playerIDs list order isn't reliably [passer, receiver, kicker] (it
-    breaks on two-point-conversion plays — see PROJECT_PLAN.md).
+    breaks on two-point-conversion plays).
     """
     ignored_keys = {"gameID", "teamID", "team", "teamAbv", "playerID", "longName", "snapCounts"}
     return {

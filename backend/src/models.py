@@ -7,7 +7,7 @@ from datetime import datetime
 @dataclass(frozen=True)
 class ScoringEvent:
     """A single scoring play. Fantasy point *values* are league-dependent
-    (DESIGN.md's custom point settings) and aren't computed here — that
+    (league-specific custom point settings) and aren't computed here — that
     happens downstream against a LeagueConfig, using scoring_type.
     player_ids often includes multiple people (e.g. passer + receiver +
     kicker on a passing TD) with no reliable single "the" scorer in the
@@ -68,8 +68,7 @@ class SleeperLeague:
     league (e.g. pass_td, rush_td, rec, fum_lost — dozens of keys) — used
     as-is to seed LeagueConfig's custom point values on import. Mapping
     these granular keys against Tank01's coarse ScoringEvent.scoring_type
-    ("TD"/"FG"/etc, no pass/rush/rec distinction) is still unresolved —
-    see PROJECT_PLAN.md open questions.
+    ("TD"/"FG"/etc, no pass/rush/rec distinction) is still unresolved.
     """
 
     league_id: str

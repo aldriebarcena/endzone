@@ -2,10 +2,9 @@ import Foundation
 import SwiftData
 
 // Mirrors the LeagueConfig DynamoDB item shape written by
-// backend/src/league_import.py. deviceToken is read by the backend's push
-// Lambda but nothing writes it yet — see PROJECT_PLAN.md open questions;
-// same gap blocks pointValues overrides (seeded read-only from Sleeper
-// for now) from ever reaching the backend.
+// backend/src/league_import.py. deviceToken is written via PUT
+// /device-token (backend/src/api/register_device_token); pointValues has
+// no override API yet and stays seeded read-only from Sleeper.
 @Model
 final class LeagueConfig {
     @Attribute(.unique) var userId: String

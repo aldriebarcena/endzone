@@ -1,6 +1,6 @@
 # ios/
 
-Swift/SwiftUI client — see [DESIGN.md](../DESIGN.md#ios-client).
+Swift/SwiftUI client. Not currently running against real infrastructure — see the root [README](../README.md) for scope.
 
 Generated via [XcodeGen](https://github.com/yonaskolb/XcodeGen) from `project.yml` — `Endzone.xcodeproj` and `Generated/` are committed so the project opens directly in Xcode without needing XcodeGen installed. If you change `project.yml`, regenerate with:
 
@@ -8,7 +8,7 @@ Generated via [XcodeGen](https://github.com/yonaskolb/XcodeGen) from `project.ym
 xcodegen generate
 ```
 
-Currently runs against `FakeEndzoneAPI` (stubbed data) since the backend has no public API surface yet (see [PROJECT_PLAN.md](../PROJECT_PLAN.md)'s open questions). `PRODUCT_BUNDLE_IDENTIFIER` is a placeholder (`com.endzone.app`) pending a real Apple Developer Team.
+Currently runs against `FakeEndzoneAPI` (stubbed data) since the backend isn't deployed; swapping to `URLSessionEndzoneAPI` is a one-line change at the `EndzoneApp.swift` injection point once it is. `PRODUCT_BUNDLE_IDENTIFIER` is a placeholder (`com.endzone.app`) pending a real Apple Developer Team.
 
 ## Running it
 

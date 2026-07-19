@@ -1,7 +1,7 @@
 import Foundation
 
-// Wire format for backend/template.yaml's EndzoneHttpApi (not deployed —
-// see PROJECT_PLAN.md's scope decision). Kept separate from the SwiftData
+// Wire format for backend/template.yaml's EndzoneHttpApi (not deployed).
+// Kept separate from the SwiftData
 // @Model types, same as the backend keeps GameState/ScoringEvent separate
 // from DynamoDB item shape (storage.py).
 

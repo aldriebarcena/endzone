@@ -19,7 +19,7 @@ from models import ScoringEvent
 # undesigned scoring model (team-defense vs. individual-defender credit
 # isn't even decided) — extending PLAY_TYPE_ROLES to cover it would be
 # guessing on two fronts at once, which this project has consistently
-# avoided (see DESIGN.md's provider-verification history).
+# avoided throughout this project.
 FIELD_GOAL_PLAY_TYPE = "Field Goal Good"
 
 PLAY_TYPE_ROLES: dict[str, tuple[str, ...]] = {

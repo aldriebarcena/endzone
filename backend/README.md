@@ -1,13 +1,15 @@
 # backend/
 
-Python AWS Lambda backend, deployed via SAM — see [DESIGN.md](../DESIGN.md#backend-aws-serverless).
+Python AWS Lambda backend, deployed via SAM. Not currently running — see the root [README](../README.md) for scope.
 
-Structure fills in as Build order phases land (see [PROJECT_PLAN.md](../PROJECT_PLAN.md)):
+- `src/adapters/` — Tank01 (live scoring), ESPN (play enrichment), Sleeper (league import)
+- `src/checker/`, `src/poller/`, `src/push/` — the three pipeline Lambdas (checker finds a live game, poller diffs scoring plays every 90s, push computes personalized fantasy points and calls APNs)
+- `src/api/` — API Gateway handlers: `import_league`, `register_device_token`, `get_live_game`
+- `template.yaml` — SAM template (Lambdas, DynamoDB tables, SQS + DLQ, API Gateway with Sign in with Apple JWT auth, billing alarm)
+- `tests/` — 59 pytest tests, no AWS credentials needed
 
-- Phase 1 — data model (`GameState`, `ScoringEvent`) and the `fetchGameState()` adapter interface in `src/`
-- Phase 2 — API-Football adapter implementation, validated with a local script
-- Phase 3 — `template.yaml` (SAM), DynamoDB tables, checker + poller Lambdas
-- Phase 4 — SQS fan-out, push Lambda, APNs
-- Phase 5 — Sleeper import adapter
-
-`requirements.txt` starts empty and gets populated as real dependencies are needed.
+```
+python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
+.venv/bin/python -m pytest
+sam validate --lint && sam build
+```

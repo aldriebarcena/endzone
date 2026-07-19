@@ -1,9 +1,8 @@
 import Foundation
 
-// Lets the UI be built and run now, ahead of the backend API surface
-// existing at all (DESIGN.md: "can be stubbed against fake data earlier
-// to parallelize"). Data below mirrors the real scoring plays captured
-// in backend/tests/fixtures/tank01_box_score_final.json (Phase 2), and
+// Lets the UI be built and run without a deployed backend. Data below
+// mirrors the real scoring plays captured in
+// backend/tests/fixtures/tank01_box_score_final.json, and
 // the point values are the exact real numbers computed and verified in
 // backend/tests/test_fantasy_points.py — not made up for the demo.
 final class FakeEndzoneAPI: EndzoneAPI {

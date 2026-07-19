@@ -4,7 +4,7 @@ import SwiftUI
 protocol EndzoneAPI {
     // No gameId parameter -- matches backend/src/api/get_live_game, which
     // always returns whichever single game the backend is currently
-    // tracking (DESIGN.md's v1 scope: one live game at a time, globally).
+    // tracking (v1 scope: one live game at a time, globally).
     // Requires authToken because the response is personalized: points
     // are computed against the caller's own LeagueConfig.pointValues.
     //

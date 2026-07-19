@@ -40,11 +40,9 @@ A few decisions worth asking about in an interview:
 - **Real bugs found via testing, not by luck**: a two-point-conversion play that fooled category-based role attribution (a receiver and a conversion target both looked like "the scorer"), a snake_case/camelCase mismatch between the iOS client's assumptions and the backend's actual wire format, and an identity token that was being captured and silently discarded. All caught by tests built against real fixture data, not synthetic examples.
 - **A gap that testing couldn't catch, because it wasn't a bug** — the push notification computed real personalized points from day one, but the live feed screen (what the user actually opens) had no way to show them at all: no read endpoint existed, and the stored game state didn't retain what it'd need to compute points on demand. Passing tests don't catch a missing feature; only asking "does this actually do what I wanted" does.
 
-Full reasoning for every non-obvious decision — including the ones that turned into "verified this isn't worth building" rather than a feature — is in [DESIGN.md](DESIGN.md) and [PROJECT_PLAN.md](PROJECT_PLAN.md).
-
 ## Status
 
-**Portfolio/demo project, not deployed.** The backend is real, deployable infrastructure (SAM template, scoped IAM policies, a cost guardrail) because designing it that way is itself the point — but running it live isn't required to see it work. The iOS app runs fully in Simulator against stubbed data. See DESIGN.md's scope decision for the reasoning.
+**Portfolio/demo project, not deployed.** The backend is real, deployable infrastructure (SAM template, scoped IAM policies, a cost guardrail) because designing it that way is itself the point — but running it live isn't required to see it work. The iOS app runs fully in Simulator against stubbed data.
 
 ## Running it
 
@@ -62,8 +60,3 @@ cd ios
 open Endzone.xcodeproj          # or: xcodebuild -project Endzone.xcodeproj -scheme Endzone -destination 'platform=iOS Simulator,name=iPhone 17' build
 ```
 Real Sign in with Apple in Simulator needs an Apple ID signed into the Simulator itself (Settings → Sign in to your iPhone) and can hang mid-flow regardless — a known Simulator limitation, not an app bug. To skip straight to the live feed, tap **Continue as Demo User** on the sign-in screen (DEBUG builds only; see `AuthManager.swift`).
-
-## Docs
-
-- [DESIGN.md](DESIGN.md) — architecture, scope decisions, cost reality, build order
-- [PROJECT_PLAN.md](PROJECT_PLAN.md) — phase-by-phase build log and every open question, with reasoning for how each was resolved

@@ -22,11 +22,11 @@ final class PushNotificationManager {
 
     func didRegister(withDeviceToken tokenData: Data) {
         deviceToken = tokenData.map { String(format: "%02x", $0) }.joined()
-        // TODO: send to backend once the LeagueConfig write API exists —
-        // see PROJECT_PLAN.md open questions. Can't verify end-to-end
-        // delivery at all yet regardless: that needs a real Apple
-        // Developer Team + APNs auth key, which isn't set up (same gap
-        // flagged for the backend's APNs sandbox testing in Phase 4).
+        // Actual registration happens in EndzoneApp.swift's
+        // registerDeviceTokenIfReady() once both this token and a signed-
+        // in user exist. Can't verify end-to-end delivery at all yet
+        // regardless: that needs a real Apple Developer Team + APNs auth
+        // key, which isn't set up.
     }
 
     func didFailToRegister(_ error: Error) {

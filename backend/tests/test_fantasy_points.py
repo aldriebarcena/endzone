@@ -97,7 +97,7 @@ def test_unhandled_play_type_returns_empty():
 
 # Field goal yardage/point-tier data below (40/57/25 yards -> 4.0/5.0/3.0
 # pts) is real: pulled live from three actual NFL games' ESPN play-by-play
-# during this project (see PROJECT_PLAN.md), cross-checked against those
+# during this project, cross-checked against those
 # plays' real text descriptions ("T.Loop 40 yard field goal is GOOD" etc).
 # No matching Tank01 sample exists for these specific plays (our one real
 # Tank01 fixture game had zero field goals), so the ScoringEvent/

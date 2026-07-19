@@ -56,7 +56,7 @@ def _process_record(record: dict, subscribers: list[dict], auth_token: str) -> N
         # Personalized per subscriber, not computed once upstream in
         # poller.py — different subscribers can have different leagues
         # with different pointValues, so the same play is worth different
-        # amounts to different people. See PROJECT_PLAN.md open questions.
+        # amounts to different people.
         points: dict[str, float] = {}
         if espn_play is not None:
             points = points_for_matched_play(

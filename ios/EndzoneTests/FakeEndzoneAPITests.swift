@@ -14,7 +14,7 @@ struct FakeEndzoneAPITests {
     @Test func fetchLiveGameIncludesRealComputedFantasyPoints() async throws {
         // These are the real numbers verified in
         // backend/tests/test_fantasy_points.py, not placeholder values --
-        // this is the whole point of the app (see PROJECT_PLAN.md).
+        // this is the whole point of the app.
         let api = FakeEndzoneAPI()
 
         let game = try await api.fetchLiveGame(authToken: "fake-token")

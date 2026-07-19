@@ -39,7 +39,7 @@ def handler(event, context):
 
 
 def _current_game_state() -> GameState | None:
-    # v1 only ever tracks one game globally (DESIGN.md's explicit scope
+    # v1 only ever tracks one game globally (an explicit v1 scope
     # decision), so "the current game" is just whichever stored item was
     # fetched most recently — handles a previous game's item not yet
     # TTL-expired (up to ~24h) without needing a dedicated "current game"

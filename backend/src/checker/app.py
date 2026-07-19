@@ -53,7 +53,7 @@ def handler(event, context):
 
 def _pick_game_to_track(games: list[dict]) -> dict | None:
     """First live game found, by provider list order. Deliberately not
-    "highest-scoring active game in their league" (DESIGN.md's stated
+    "highest-scoring active game in their league" (the original design
     goal) — that's not a "haven't gotten to it yet" gap, it's a reasoned
     dead end given this project's actual constraints:
 
@@ -70,12 +70,12 @@ def _pick_game_to_track(games: list[dict]) -> dict | None:
        goal needs per-user roster awareness (which players are on which
        user's team) to know which games are even relevant to a given
        push subscriber. That needs full Sleeper roster import (Phase 5
-       deliberately skipped this as speculative — see PROJECT_PLAN.md)
+       deliberately skipped this as speculative)
        AND a player-ID mapping across three providers whose ID schemes
        have never been cross-checked against each other (Sleeper, Tank01,
        ESPN all use different numbering).
 
-    3. Even solving #2 runs into DESIGN.md's own explicit v1 non-goal:
+    3. Even solving #2 runs into this project's own explicit v1 non-goal:
        multi-game concurrent tracking is out of scope ("explicit future
        work, not an oversight"). Different users caring about different
        games would need exactly that.

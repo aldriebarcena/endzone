@@ -3,10 +3,9 @@ import Foundation
 // The real backend implementation. Matches backend/template.yaml's
 // EndzoneHttpApi routes (GET /live-game, POST /leagues, PUT /device-
 // token) and the Sign in with Apple JWT auth its authorizer expects.
-// Untestable end-to-end right now regardless — the API isn't deployed
-// (see PROJECT_PLAN.md's scope decision), so this is verified by
-// matching the backend's actual route/handler code, not by hitting a
-// live endpoint.
+// Untestable end-to-end right now regardless — the API isn't deployed,
+// so this is verified by matching the backend's actual route/handler
+// code, not by hitting a live endpoint.
 final class URLSessionEndzoneAPI: EndzoneAPI {
     private let baseURL: URL
     private let session: URLSession

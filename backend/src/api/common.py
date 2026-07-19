@@ -10,7 +10,7 @@ import json
 # claims: iss=https://appleid.apple.com, aud=bundle ID for native apps,
 # sub=stable per-user identifier) — not independently re-verified against
 # a live token, since that needs a real device + deployed API Gateway,
-# neither of which exist yet (see PROJECT_PLAN.md's scope decision).
+# neither of which exist yet.
 def user_id_from_event(event: dict) -> str:
     return event["requestContext"]["authorizer"]["jwt"]["claims"]["sub"]
 
